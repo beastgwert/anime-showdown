@@ -1,0 +1,66 @@
+.levels-display {
+    padding: 0 10rem;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.levels-card.levels-card {
+    box-shadow: 0 0 20px black;
+}
+.levels-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20rem;
+}
+
+.level-button-wrapper {
+    position: relative;
+}
+.level-button {
+    border-radius: 10px;
+    transform: rotate(45deg);
+    height: 10rem;
+    width: 10rem;
+    font-size: 3rem;
+    background: black;
+    color: white;
+    border: 1.5px solid white;
+}
+
+.level-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-45deg);
+}
+
+.level-title {
+    font-weight: 400;
+}
+.level-caption {
+    font-weight: 100;
+    font-size: 1rem;
+    font-style: italic;
+}
+.level-button:hover {
+    /* transform: scale(0.9); */
+    transition: all 0.2s ease 0s;
+    background: white;
+    color: black;
+    border-color: black;
+}
+
+.level-button-wrapper img {
+    z-index: 4;
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    top: -65%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -1,0 +1,49 @@
+/* .cards-page .card-wrapper {
+    display: inline-block;
+} */
+
+.cards-loadout {
+    padding-bottom: 4rem;
+    border-bottom: 2px dotted black;
+    flex: 0.8;
+}
+
+.cards-loadout-content {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.cards-inventory {
+    background: #a59b63;
+    flex: 1;
+       
+}
+
+.cards-inventory-content {
+    width: 100%;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.cards-inventory, .cards-loadout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    gap: 1rem;
+}
+
+.cards-page h2 {
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.selected-to-swap.selected-to-swap{
+    border: 2.5px dashed white;
+    transition: all 0.25s ease 0s;
+    transform: scale(0.95);
+}

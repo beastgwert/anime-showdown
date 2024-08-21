@@ -1,0 +1,74 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities"; 
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* border: 0.5px solid yellow; */
+    background-color: white;
+    line-height: normal;
+  }
+
+html {
+    font-size: 14px;
+    @media (max-width: 1600px) {
+        font-size: 80%;
+    }
+
+    @media (max-width: 1400px) {
+        font-size: 70%;
+    }
+
+    @media (max-width: 1200px) {
+        font-size: 60%;
+    }
+
+    @media (max-width: 1000px) {
+        font-size: 50%;
+    }
+
+    @media (max-width: 800px) {
+        font-size: 40%;
+    }
+
+    @media (max-width: 650px) {
+        font-size: 35%;
+    }
+
+    @media (max-width: 500px) {
+        font-size: 30%;
+    }
+
+    @media (max-width: 450px) {
+        font-size: 25%;
+    }
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+html, body{
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+    transition: all 0.5s ease 0s;
+    border: none;
+    font-family: inherit;
+}

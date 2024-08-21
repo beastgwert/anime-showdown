@@ -1,0 +1,79 @@
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 12rem;
+    height: 20rem;
+    padding: 0.5rem 0;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.card-photo {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid black;
+    background: rgb(234, 234, 180);
+}
+
+.image-wrapper {
+    height: 10rem;
+    flex: 1;
+    padding: 0.5rem 1rem 0.5rem;
+}
+
+.card p {
+    display: flex;
+    justify-content: center;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+
+#Gojo {
+    background: linear-gradient(#dce8a3, #090a15);
+}
+
+#Sung-jin-woo {
+    background: linear-gradient(#7ca7cd, #090f15);
+}
+
+#Luffy {
+    background: linear-gradient(#ce3f3f, #16150f);
+}
+
+#Natsu {
+    background: linear-gradient(#8acd7c, #0d1509);
+}
+
+#Kirito {
+    background: linear-gradient(#cd7cba, #150911);
+}
+
+#Ichigo {
+    background: linear-gradient(#cd967c, #150e09);
+}
+
+#Kakashi {
+    background: linear-gradient(#dbdce8, #090b15);
+}
+
+#Anya {
+    background: linear-gradient(#cd7cc5, #140915);
+}
+
+#Mikasa {
+    background: linear-gradient(#cdc17c, #130404);
+}
+
+#Mudkip {
+    background: linear-gradient(#3fcec9, #041313);
+}
+.card:hover {
+    cursor: pointer;
+}

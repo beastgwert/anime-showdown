@@ -1,0 +1,36 @@
+
+#header {
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+}
+
+#header a, i {
+    transition: all 0.25s ease 0s;
+}
+
+#header a, .separator {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+#header a:hover, #instructions-button:hover {
+    color: black;
+    cursor: pointer;
+}
+
+nav{
+    display: flex;
+    gap: 0.5rem;
+}
+
+#instructions-button {
+    font-size: 1.5rem;
+}
+
+.underline {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+}

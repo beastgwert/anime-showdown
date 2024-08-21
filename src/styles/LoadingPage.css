@@ -1,0 +1,26 @@
+.loading-page {
+    font-family: "Roboto Condensed", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    background: black;
+    color: white;
+}
+
+.loading-page * {
+    background: inherit;
+}
+
+.loading-page h2 {
+    font-weight: 200;
+    position: absolute;
+    background: transparent;
+    z-index: 5;
+}
+
+.loading-page span {
+    width: 5rem;
+    height: 5rem;
+}
