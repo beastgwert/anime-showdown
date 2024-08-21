@@ -6,7 +6,9 @@ import Ripple from './Ripple';
 import VictoryOverlay from './Overlays/VictoryOverlay';
 import LossOverlay from './Overlays/LossOverlay';
 
-export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage, cardLevels, enemyName, enemyLevel, stagesComplete, setStagesComplete}){
+export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage, cardLevels, enemyName, 
+    enemyLevel, stagesComplete, setStagesComplete, levelPoints, setLevelPoints}){
+
     console.log('level rerendered!');
     const [isLevelBeat, setIsLevelBeat] = useState(false);
     const [isLevelLost, setIsLevelLost] = useState(false);
@@ -154,7 +156,8 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
 
     return (
         <>
-            {isLevelBeat ? <VictoryOverlay levelNumber={levelNumber} stagesComplete={stagesComplete} setStagesComplete={setStagesComplete}/> : null}
+            {isLevelBeat ? <VictoryOverlay levelNumber={levelNumber} stagesComplete={stagesComplete} setStagesComplete={setStagesComplete}
+            levelPoints={levelPoints} setLevelPoints={setLevelPoints}/> : null}
             {isLevelLost && !isLevelBeat ? <LossOverlay /> : null}
             <div className="level">
                 <div className='level-display'>

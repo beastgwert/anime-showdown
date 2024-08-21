@@ -7,8 +7,12 @@ import Card from '../Card'
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function CardsPage(){
-    const [loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay, setCurPage, setBgColor, cardLevels, setBgImage] = useOutletContext();
+    const [loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay, setCurPage, setBgColor,
+        cardLevels, setBgImage, stagesComplete, setStagesComplete, levelPoints, setLevelPoints, handleLevelUp,
+        handleSkillReset] = useOutletContext();
     const [isSwapping, setIsSwapping] = useState("");
+    const loadoutIndices = [...Array(3).keys()];
+    const inventoryIndices = [...Array(7).keys()];
 
     useEffect(() => {
         setBgColor('#cdc17c');
@@ -68,25 +72,31 @@ export default function CardsPage(){
         <>
             <Header setOverlay={() => setIsOverlay(true)}  curPage='cards'  changePage={(newPage) => setCurPage(newPage)}/>
             <div className="cards-page sub-page">
+                <div className='level-points-wrapper'>
+                    <p className='level-points-title'>Skill Points: {levelPoints}</p>
+                    <i className='level-points-reset fa-solid fa-arrow-rotate-right' onClick={handleSkillReset}></i>
+                </div>
                 <div className='cards-loadout'>
                     <h2>Loadout</h2>
                     <div className='cards-loadout-content'>
-                        <Card name={loadoutCards[0]} isHighlighted={isSwapping == loadoutCards[0]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                        <Card name={loadoutCards[1]} isHighlighted={isSwapping == loadoutCards[1]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                        <Card name={loadoutCards[2]} isHighlighted={isSwapping == loadoutCards[2]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
+                        {
+                            loadoutIndices.map((i) => {
+                                return <Card key={i} name={loadoutCards[i]} isHighlighted={isSwapping == loadoutCards[i]} handleSwapping={handleSwapping}
+                                 cardLevels={cardLevels} levelPoints={levelPoints} handleLevelUp={handleLevelUp}/>
+                            })
+                        }
                     </div>
                 </div>
                 <div className='cards-inventory'>
                     <div className='cards-inventory-content'>
                         <FaChevronLeft className='text-xl cursor-pointer hover:scale-75 ease-in-out duration-500' onClick={slideLeft}/>
                         <div id='slider' className='flex gap-6 w-2/3 h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar-hide'>
-                            <Card name={inventoryCards[0]} isHighlighted={isSwapping == inventoryCards[0]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                            <Card name={inventoryCards[1]} isHighlighted={isSwapping == inventoryCards[1]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                            <Card name={inventoryCards[2]} isHighlighted={isSwapping == inventoryCards[2]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                            <Card name={inventoryCards[3]} isHighlighted={isSwapping == inventoryCards[3]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                            <Card name={inventoryCards[4]} isHighlighted={isSwapping == inventoryCards[4]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                            <Card name={inventoryCards[5]} isHighlighted={isSwapping == inventoryCards[5]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
-                            <Card name={inventoryCards[6]} isHighlighted={isSwapping == inventoryCards[6]} handleSwapping={handleSwapping} cardLevels={cardLevels}/>
+                            {
+                                inventoryIndices.map((i) => {
+                                    return <Card key={i} name={inventoryCards[i]} isHighlighted={isSwapping == inventoryCards[i]} handleSwapping={handleSwapping}
+                                     cardLevels={cardLevels} levelPoints={levelPoints} handleLevelUp={handleLevelUp}/>
+                                })
+                            }
                         </div>
                         <FaChevronRight className='text-xl cursor-pointer hover:scale-75 ease-in-out duration-500' onClick={slideRight}/>
                     </div>

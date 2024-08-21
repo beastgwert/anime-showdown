@@ -1,11 +1,11 @@
-/* .cards-page .card-wrapper {
-    display: inline-block;
-} */
+.cards-page {
+    position: relative;
+}
 
 .cards-loadout {
-    padding-bottom: 4rem;
     border-bottom: 2px dotted black;
-    flex: 0.8;
+    flex: 1;
+    padding-bottom: 1rem;
 }
 
 .cards-loadout-content {
@@ -17,7 +17,7 @@
 .cards-inventory {
     background: #a59b63;
     flex: 1;
-       
+    padding-top: 1rem;
 }
 
 .cards-inventory-content {
@@ -46,4 +46,29 @@
     border: 2.5px dashed white;
     transition: all 0.25s ease 0s;
     transform: scale(0.95);
+}
+
+.level-points-wrapper {
+    padding: 0.5rem 1rem;
+    position: absolute;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 20%);
+    display: flex;
+    gap: 1rem;
+}
+
+.level-points-title {
+    font-size: 1.75rem;
+}
+
+.level-points-reset {
+    font-size: 1.75rem;
+    transform: rotate(90deg) scaleX(-1);
+    cursor: pointer;
+}
+
+.level-points-reset:hover {
+    color: white;
 }

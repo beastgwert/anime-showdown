@@ -8,7 +8,7 @@
       'Sung-jin-woo': [2000, 2100],
       'Mikasa': [80, 120],
       'Luffy': [110, 130],
-      'Kirito': [2000, 2500],
+      'Kirito': [200, 250],
    },
    abilityDescription: {
       'Sung-jin-woo': 'Shadows heal allies for a fraction of Sung-jin-woo\'s remaining health',

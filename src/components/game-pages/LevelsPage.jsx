@@ -7,7 +7,7 @@ import Header from '../Header';
 import { useOutletContext } from 'react-router-dom';
 
 export default function LevelsPage(){
-    const [loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay, setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete] = useOutletContext();
+    const [loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay, setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete, levelPoints, setLevelPoints] = useOutletContext();
     const {level = -1} = useParams();
     console.log("got to levels page: ", level);
     useEffect(() => {
@@ -35,6 +35,8 @@ export default function LevelsPage(){
                     enemyLevel = {3}
                     stagesComplete = {stagesComplete}
                     setStagesComplete = {setStagesComplete}
+                    levelPoints = {levelPoints}
+                    setLevelPoints = {setLevelPoints}
                     />
                 }
                 

@@ -36,6 +36,8 @@ export default function GamePage(){
     console.log("colors: ", bgColor, bgImage);
     console.log("first update: ", firstUpdate);
     console.log("level points: ", levelPoints);
+
+    
     // search for email and add one if not found
     async function handleFetchData(){
         console.log("here");
@@ -43,7 +45,8 @@ export default function GamePage(){
 
         // check if user exists
         var tempUserExists = false;
-        await fetch("https://anime-showdown.up.railway.app/api/userExists?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
+        // change fetch url to https://anime-showdown.up.railway.app for prod
+        await fetch("http://localhost:8080/api/userExists?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
             .then((res) => res.json())
             .then((data) => {tempUserExists = data;})
             .catch((error) => console.log(error));
@@ -51,7 +54,7 @@ export default function GamePage(){
         // add new player if not in database
         if(!tempUserExists){
             console.log("passed info: ", loadoutCards, inventoryCards)
-            await fetch("https://anime-showdown.up.railway.app/api", {
+            await fetch("http://localhost:8080/api", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -72,7 +75,7 @@ export default function GamePage(){
         }
         console.log("got to update existing player: ");
         // update existing player
-        await fetch("https://anime-showdown.up.railway.app/api?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
+        await fetch("http://localhost:8080/api?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
         .then((res) => res.json())
         .then((data) => {
             setPlayerInfo(data.playerInfo);
@@ -80,6 +83,7 @@ export default function GamePage(){
             setInventoryCards(data.cardInfo.inventory);
             setStagesComplete(data.stagesInfo);
             setLevelPoints(data.levelPoints);
+            setCardLevels(data.cardLevels);
             console.log("Data: ", data);
         })
         .catch((error) => console.log(error));
@@ -91,7 +95,7 @@ export default function GamePage(){
         if(firstUpdate) return;
         
         console.log("got to handle cards", loadoutCards, inventoryCards);
-        await fetch("https://anime-showdown.up.railway.app/api/update/cards", {
+        await fetch("http://localhost:8080/api/update/cards", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -109,7 +113,7 @@ export default function GamePage(){
         if(firstUpdate) return;
 
         console.log("got to handle stages", stagesComplete);
-        await fetch("https://anime-showdown.up.railway.app/api/update/stages", {
+        await fetch("http://localhost:8080/api/update/stages", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -125,7 +129,7 @@ export default function GamePage(){
         if(firstUpdate) return;
 
         console.log("got to level points:", levelPoints);
-        await fetch("https://anime-showdown.up.railway.app/api/update/levelPoints", {
+        await fetch("http://localhost:8080/api/update/levelPoints", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -136,12 +140,14 @@ export default function GamePage(){
             }),
         }).then((res) => res.json()).catch((error) => console.log(error));
     }
+
+    
     useEffect(() => { 
         handleFetchData();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         handleCardsUpdate();
-    }, [loadoutCards, inventoryCards]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [loadoutCards, inventoryCards, cardLevels]); // eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         handleStagesUpdate();
     }, [stagesComplete]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -155,8 +161,22 @@ export default function GamePage(){
         }, 1000);
     }, [isLoading]);
 
-    if(jwtToken == "no_token") return (<ErrorPage />);
+    function handleLevelUp(name){
+        let tempCardLevels = {...cardLevels};
+        tempCardLevels[name] += 1;
+        setCardLevels(tempCardLevels);
+        setLevelPoints(levelPoints - 1);
+    }
 
+    function handleSkillReset(){
+        let usedPoints = 0;
+        loadoutCards.forEach((card) => {usedPoints += cardLevels[card] - 1;})
+        inventoryCards.forEach((card) => {usedPoints += cardLevels[card] - 1;})
+        setLevelPoints(levelPoints + usedPoints);
+        setCardLevels(characterInfo.defaultValues.cardLevels);
+    }
+
+    if(jwtToken == "no_token") return (<ErrorPage />);
 
     return (
         <>
@@ -170,10 +190,12 @@ export default function GamePage(){
             onClose={() => setIsOverlay(false)}
             username={playerInfo.username}
             />
+             {/* onClick={() => {setStagesComplete([]); setCardLevels(characterInfo.defaultValues.cardLevels)}} */}
             <div className="gamepage-main page" style={{ 'background': bgImage == '' ? bgColor : bgImage}}
-            onClick={() => setLevelPoints(0)}>
+            >
                 <Outlet context={[loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay,
-                    setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete]}/>
+                    setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete, levelPoints, setLevelPoints, handleLevelUp,
+                    handleSkillReset]}/>
             </div>
             </>
         }

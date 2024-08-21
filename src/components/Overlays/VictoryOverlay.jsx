@@ -1,7 +1,7 @@
 import '../../styles/VictoryOverlay.css'
 import { useNavigate } from 'react-router-dom';
 
-export default function VictoryOverlay({levelNumber, stagesComplete, setStagesComplete}){
+export default function VictoryOverlay({levelNumber, stagesComplete, setStagesComplete, levelPoints, setLevelPoints}){
     const navigate = useNavigate();
 
     return (
@@ -10,9 +10,12 @@ export default function VictoryOverlay({levelNumber, stagesComplete, setStagesCo
                 <div className="victory-overlay-container">
                     <h1 >Victory!</h1>
                     <button onClick={() => {
+                        
+                        if(!stagesComplete.includes(parseInt(levelNumber))) setLevelPoints(parseInt(levelPoints) + 2);
                         let tempStages = [...stagesComplete];
                         if(!tempStages.includes(parseInt(levelNumber))) tempStages.push(parseInt(levelNumber));
                         setStagesComplete(tempStages); 
+                        
                         navigate('/play/cards');
                     }}>
                         Continue

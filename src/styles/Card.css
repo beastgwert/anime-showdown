@@ -1,4 +1,26 @@
 
+.card-wrapper {
+    position: relative;
+}
+
+.level-up-button {
+    position: absolute;
+    background: black;
+    color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.5rem 0.75rem;
+    top: 102%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    cursor: pointer;
+    transition: all 0.2s ease 0s;
+}
+
+.level-up-button:hover {
+    color:black;
+    background-color: white;
+}
 .card {
     display: flex;
     flex-direction: column;
