@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import Header from '../Header';
 import '../../styles/CardPage.css'
 import '../../styles/Card.css'
-import Card from '../card'
+import Card from '../Card'
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function CardsPage(){
