@@ -5,9 +5,11 @@
       'Luffy': ['Gum-Gum: Pistol', 'Gear 3'],
    },
    abilityDamages: {
-      'Sung-jin-woo': [2000, 2100],
+      'Sung-jin-woo': [160, 200],
       'Mikasa': [80, 120],
       'Luffy': [110, 130],
+   },
+   enemyAbilityDamages: {
       'Kirito': [200, 250],
    },
    abilityDescription: {

@@ -24,7 +24,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     const [displayClicks, setDisplayClicks] = useState(0);
     const [loadoutHealth, setLoadoutHealth] = useState(loadoutCards.map((card) => characterInfo.health[card][cardLevels[card]-1]));
     const [enemyHealth, setEnemyHealth] = useState(characterInfo.health[enemyName][enemyLevel-1]);
-    const[abilityDamages, setAbilityDamages] = useState({...characterInfo.abilityDamages});
+    const [abilityDamages, setAbilityDamages] = useState(characterInfo.abilityDamages);
     const [isMikasaCharged, setIsMikasaCharged] = useState(false);
     const [isEnemyParalyzed, setIsEnemyParalyzed] = useState(false);
     const [luffyBuffCnt, setLuffyBuffCnt] = useState(0);
@@ -36,6 +36,13 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, #cd7cc5)`)
         setBgImage(''); 
     });
+    useEffect(() => { // adjust card damage based on level
+        const tempAbilityDamages = {};
+        Object.entries(abilityDamages).forEach(([name, dmgRange]) => {
+            tempAbilityDamages[name] = [dmgRange[0] * cardLevels[name], dmgRange[1] * cardLevels[name]];
+        });
+        setAbilityDamages(tempAbilityDamages);
+    }, [cardLevels]);
     useEffect(() => { // check if level is beat
         if(enemyHealth == 0) setIsLevelBeat(true);
     }, [enemyHealth])
@@ -90,7 +97,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         setEnemyTarget(attackedIndex);
         
         setTimeout(() => {
-            let damage = getRandomInt(abilityDamages[enemyName][0], abilityDamages[enemyName][1]);
+            let damage = getRandomInt(characterInfo.enemyAbilityDamages[enemyName][0], characterInfo.enemyAbilityDamages[enemyName][1]);
             let tempHealth = [...loadoutHealth];
             tempHealth[validIndices[attackedIndex]] = Math.max(tempHealth[validIndices[attackedIndex]] - damage, 0);
             setLoadoutHealth(tempHealth);
