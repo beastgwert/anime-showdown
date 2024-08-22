@@ -86,7 +86,7 @@
 }
 
 #Anya {
-    background: linear-gradient(#cd7cc5, #140915);
+    background: linear-gradient(#e5a5a5, #140915);
 }
 
 #Mikasa {
@@ -95,6 +95,14 @@
 
 #Mudkip {
     background: linear-gradient(#3fcec9, #041313);
+}
+
+#Genos {
+    background: linear-gradient(#ebad4f, #041313);
+}
+
+#Makima {
+    background: linear-gradient(#9bdfc3, #041313);
 }
 .card:hover {
     cursor: pointer;

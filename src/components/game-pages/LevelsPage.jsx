@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import '../../styles/LevelsPage.css'
 import Header from '../Header';
 import { useOutletContext } from 'react-router-dom';
-
+import characterInfo from '../../character-info';
 export default function LevelsPage(){
     const [loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay, setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete, levelPoints, setLevelPoints] = useOutletContext();
     const {level = -1} = useParams();
@@ -31,8 +31,8 @@ export default function LevelsPage(){
                     setBgColor = {setBgColor}
                     setBgImage = {setBgImage}
                     cardLevels = {cardLevels}
-                    enemyName = {'Kirito'}
-                    enemyLevel = {3}
+                    enemyName = {characterInfo.bossNames[level-1]}
+                    enemyLevel = {characterInfo.bossLevels[level-1]}
                     stagesComplete = {stagesComplete}
                     setStagesComplete = {setStagesComplete}
                     levelPoints = {levelPoints}

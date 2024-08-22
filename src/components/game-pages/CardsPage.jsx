@@ -12,7 +12,7 @@ export default function CardsPage(){
         handleSkillReset] = useOutletContext();
     const [isSwapping, setIsSwapping] = useState("");
     const loadoutIndices = [...Array(3).keys()];
-    const inventoryIndices = [...Array(7).keys()];
+    const inventoryIndices = [...Array(8).keys()];
 
     useEffect(() => {
         setBgColor('#cdc17c');
