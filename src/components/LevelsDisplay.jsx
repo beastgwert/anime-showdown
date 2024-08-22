@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-
+import characterInfo from '../character-info';
 export default function LevelsDisplay({stagesComplete}){
     const navigate = useNavigate();
     console.log("Got to levels display: ", stagesComplete);
@@ -11,8 +11,8 @@ export default function LevelsDisplay({stagesComplete}){
                         {stagesComplete.includes(1) ? <img src="/images/crown.png" alt="" /> : null}
                         <button className='level-button' onClick={() => navigate('/play/levels/1')} >
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[0]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[0]} </p>
                             </div>
                         </button>
                     </div>
@@ -23,8 +23,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(1) ? () => navigate('/play/levels/2') : null} 
                         style={stagesComplete.includes(1) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[1]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[1]}</p>
                             </div>
                         </button>
                     </div>
@@ -33,8 +33,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(1) ? () => navigate('/play/levels/3') : null} 
                         style={stagesComplete.includes(1) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[2]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[2]}</p>
                             </div>
                         </button>
                     </div>

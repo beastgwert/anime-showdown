@@ -170,9 +170,9 @@ export default function GamePage(){
 
     function handleSkillReset(){
         let usedPoints = 0;
-        loadoutCards.forEach((card) => {usedPoints += cardLevels[card] - 1;})
-        inventoryCards.forEach((card) => {usedPoints += cardLevels[card] - 1;})
-        setLevelPoints(levelPoints + usedPoints);
+        loadoutCards.forEach((card) => {usedPoints += parseInt(cardLevels[card]) - 1;})
+        inventoryCards.forEach((card) => {usedPoints += parseInt(cardLevels[card]) - 1;})
+        setLevelPoints(parseInt(levelPoints) + parseInt(usedPoints));
         setCardLevels(characterInfo.defaultValues.cardLevels);
     }
 
@@ -192,6 +192,7 @@ export default function GamePage(){
             />
              {/* onClick={() => {setStagesComplete([]); setCardLevels(characterInfo.defaultValues.cardLevels)}} */}
             <div className="gamepage-main page" style={{ 'background': bgImage == '' ? bgColor : bgImage}}
+            // onClick={() => {setStagesComplete([1]); setLevelPoints(2);}}
             >
                 <Outlet context={[loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay,
                     setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete, levelPoints, setLevelPoints, handleLevelUp,

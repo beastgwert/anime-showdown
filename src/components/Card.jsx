@@ -9,8 +9,8 @@ export default function Card({name, isHighlighted, handleSwapping, cardLevels, l
                 </div>
                 <p>{name} (LV {cardLevels[name]})</p>
             </div>
-            {levelPoints > 0 ? 
-            <i className='level-up-button fa-solid fa-arrow-up' onClick={() => {handleLevelUp(name)}}>
+            {levelPoints > 0 && cardLevels[name] < 6 ? 
+            <i className='level-up-button fa-solid fa-arrow-up' onClick={ () => {handleLevelUp(name)}}>
                 
             </i>
             : null}

@@ -36,7 +36,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     console.log('Was special: ', wasSpecialAbility);
     
     useEffect(() => { // change background
-        setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, #cd7cc5)`)
+        setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, ${characterInfo.bgColors[enemyName]})`)
         setBgImage(''); 
     });
     useEffect(() => { // adjust card damage based on level
@@ -61,7 +61,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
 
                 let tempAbilityDamages = {...abilityDamages};
                 if(mainCard == 'Mikasa' && isMikasaCharged){
-                    if(getRandomInt(0, 10) < 4) setIsEnemyParalyzed(true);
+                    if(getRandomInt(0, 10) < 3) setIsEnemyParalyzed(true);
                     setIsMikasaCharged(false);
                 }
                 if(mainCard == 'Luffy'){
@@ -74,7 +74,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                 }
                 if(mainCard == 'Natsu'){
                     setIsEnemyBurned(true);
-                    if(natsuBuffCnt > 1 && getRandomInt(0, 10) < 2) setIsEnemyParalyzed(true); 
+                    if(natsuBuffCnt > 1 && getRandomInt(0, 10) < 1) setIsEnemyParalyzed(true); 
                     if(natsuBuffCnt == 1){
                         tempAbilityDamages['Natsu'][0] /= 1.5; 
                         tempAbilityDamages['Natsu'][1] /= 1.5;
@@ -100,7 +100,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         if(isEnemyBurned){
             console.log("wowww the enemy was burneeeeddddd");
             setTimeout(() => {
-                setEnemyHealth(enemyHealth - getRandomInt(40, 60));
+                setEnemyHealth(Math.max(0, enemyHealth - getRandomInt(40, 60)));
                 setIsEnemyBurned(false);
             }, 500)
         }

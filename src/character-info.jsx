@@ -15,6 +15,8 @@
    },
    enemyAbilityDamages: {
       'Kirito': [200, 250],
+      'Doflamingo': [300, 400],
+      'Tanjiro': [240, 280],
    },
    abilityDescription: {
       'Sung-jin-woo': 'Shadows heal allies for a fraction of Sung-jin-woo\'s remaining health',
@@ -24,6 +26,9 @@
       'Natsu': 'Natsu transforms, increasing damage and having a small chance to paralyze enemies for the next 3 rounds',
    },
    bgColors: {
+      'Kirito': '#0A20A0',
+      'Doflamingo': '#cd7cc5',
+      'Tanjiro': '#6CCC74',
       'Sung-jin-woo': '#7ca7cd',
       'Mikasa': '#cdc17c',
       'Luffy': '#ce3f3f',
@@ -48,15 +53,18 @@
       stagesComplete: [],
    },
    health: {
-      'Sung-jin-woo': [400, 500, 600],
-      'Mikasa': [600, 800, 900],
-      'Luffy': [450, 600, 750],
-      'Kirito': [500, 1000, 2000],
-      'Gojo': [450, 600, 750],
-      'Natsu': [500, 675, 850],
+      'Kirito': [2000, 3000, 4000],
+      'Doflamingo': [2000, 3500, 4000],
+      'Tanjiro': [2000, 4500, 5000],
+      'Sung-jin-woo': [400, 500, 600, 700, 800, 900],
+      'Mikasa': [600, 800, 1000, 1200, 1400, 1600],
+      'Luffy': [450, 600, 750, 900, 1050, 1200],
+      'Gojo': [450, 600, 750, 900, 1050, 1200],
+      'Natsu': [500, 675, 850, 1025, 1200, 1375],
    },
-   bossNames: ['Kirito'],
-   bossLevels: [3],
+   bossNames: ['Kirito', 'Doflamingo', 'Tanjiro'],
+   bossDescriptions: ['Black Swordsman', 'Joker', 'Demon Slayer'],
+   bossLevels: [1, 2, 2],
  }
 
  export default characterInfo;

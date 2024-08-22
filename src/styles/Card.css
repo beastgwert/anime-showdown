@@ -56,6 +56,17 @@
     font-size: 1rem;
 }
 
+#Kirito {
+    background: linear-gradient(#0A20A0, #150911);
+}
+
+#Doflamingo {
+    background: linear-gradient(#cd7cba, #150911);
+}
+
+#Tanjiro {
+    background: linear-gradient(#6CCC74, #150911);
+}
 
 #Gojo {
     background: linear-gradient(#dce8a3, #090a15);
@@ -71,10 +82,6 @@
 
 #Natsu {
     background: linear-gradient(#8acd7c, #0d1509);
-}
-
-#Kirito {
-    background: linear-gradient(#cd7cba, #150911);
 }
 
 #Ichigo {
