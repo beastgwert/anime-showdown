@@ -69,8 +69,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(5) ? () => navigate('/play/levels/6') : null} 
                         style={stagesComplete.includes(5) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[5]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[5]} </p>
                             </div>
                         </button>
                     </div>
@@ -79,8 +79,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(5) ? () => navigate('/play/levels/7') : null} 
                         style={stagesComplete.includes(5) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[6]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[6]}</p>
                             </div>
                         </button>
                     </div>
@@ -91,8 +91,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(6) || stagesComplete.includes(7) ? () => navigate('/play/levels/8') : null} 
                         style={stagesComplete.includes(6) || stagesComplete.includes(7) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[7]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[7]} </p>
                             </div>
                         </button>
                     </div>

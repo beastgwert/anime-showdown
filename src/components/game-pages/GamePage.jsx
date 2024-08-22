@@ -192,7 +192,7 @@ export default function GamePage(){
             />
              {/* onClick={() => {setStagesComplete([]); setCardLevels(characterInfo.defaultValues.cardLevels)}} */}
             <div className="gamepage-main page" style={{ 'background': bgImage == '' ? bgColor : bgImage}}
-            // onClick={() => {setStagesComplete([1]); setLevelPoints(2);}}
+            // onClick={() => {setStagesComplete([1, 2, 3, 4, 5, 6, 7]); setLevelPoints(14);}}
             >
                 <Outlet context={[loadoutCards, setLoadoutCards, inventoryCards, setInventoryCards, setIsOverlay,
                     setCurPage, setBgColor, cardLevels, setBgImage, stagesComplete, setStagesComplete, levelPoints, setLevelPoints, handleLevelUp,

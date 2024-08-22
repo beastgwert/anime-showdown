@@ -18,7 +18,10 @@
       'Doflamingo': [300, 400],
       'Tanjiro': [240, 280],
       'Escanor': [400, 450],
-      'Anderson': [1500, 1501],
+      'Anderson': [500, 501],
+      'Korosensei': [525, 575],
+      'Hisoka': [100, 1500],
+      'Saitama': [10000, 10001]
    },
    abilityDescription: {
       'Sung-jin-woo': 'Shadows heal allies for a fraction of Sung-jin-woo\'s max health',
@@ -33,6 +36,9 @@
       'Tanjiro': '#6CCC74',
       'Escanor': '#E29A48',
       'Anderson': '#d8e386',
+      'Korosensei': '#E5E632',
+      'Hisoka': '#0A0235',
+      'Saitama': 'black',
       'Sung-jin-woo': '#7ca7cd',
       'Mikasa': '#cdc17c',
       'Luffy': '#ce3f3f',
@@ -62,15 +68,18 @@
       'Tanjiro': [2000, 4500, 5000],
       'Escanor': [2000, 4000, 7000],
       'Anderson': [2000, 4000, 6000, 9000],
+      'Korosensei': [2000, 4000, 6000, 8000, 11500],
+      'Hisoka': [2000, 4000, 6000, 8000, 10000],
+      'Saitama': [1000, 2000, 3000, 4000, 5000, 8000],
       'Sung-jin-woo': [400, 500, 600, 700, 800, 900],
       'Mikasa': [600, 800, 1000, 1200, 1400, 1600],
       'Luffy': [450, 600, 750, 900, 1050, 1200],
       'Gojo': [450, 600, 750, 900, 1050, 1200],
       'Natsu': [500, 675, 850, 1025, 1200, 1375],
    },
-   bossNames: ['Kirito', 'Doflamingo', 'Tanjiro', 'Escanor', 'Anderson'],
-   bossDescriptions: ['Black Swordsman', 'Joker', 'Demon Slayer', 'Sin of Pride', 'Father'],
-   bossLevels: [1, 2, 2, 3, 4],
+   bossNames: ['Kirito', 'Doflamingo', 'Tanjiro', 'Escanor', 'Anderson', 'Korosensei', 'Hisoka', 'Saitama'],
+   bossDescriptions: ['Black Swordsman', 'Joker', 'Demon Slayer', 'Sin of Pride', 'Father', 'Tentacled Menace', 'Bungee Gum', 'One Punch Man'],
+   bossLevels: [1, 2, 2, 3, 4, 5, 5, 6],
  }
 
  export default characterInfo;
