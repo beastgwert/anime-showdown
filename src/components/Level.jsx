@@ -39,6 +39,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, ${characterInfo.bgColors[enemyName]})`)
         setBgImage(''); 
     });
+    
     useEffect(() => { // adjust card damage based on level
         const tempAbilityDamages = {};
         Object.entries(abilityDamages).forEach(([name, dmgRange]) => {
@@ -98,7 +99,6 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         if(!isEnemyTurn || isClicking || firstUpdate) return;
 
         if(isEnemyBurned){
-            console.log("wowww the enemy was burneeeeddddd");
             setTimeout(() => {
                 setEnemyHealth(Math.max(0, enemyHealth - getRandomInt(40, 60)));
                 setIsEnemyBurned(false);
@@ -114,26 +114,66 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         loadoutHealth.forEach((e, i) => {
             if(e != 0) validIndices.push(i);
         });
-        let attackedIndex = getRandomInt(0, validIndices.length);
+        let attackedIndex = validIndices[getRandomInt(0, validIndices.length)];
         setEnemyTarget(attackedIndex);
         
         setTimeout(() => {
             let damage = getRandomInt(characterInfo.enemyAbilityDamages[enemyName][0], characterInfo.enemyAbilityDamages[enemyName][1]);
             if(loadoutCards[attackedIndex] == 'Gojo' && gojoBuffCnt > 0) 
                 damage = 0;
+            console.log("Boss damage: ", attackedIndex, gojoBuffCnt, damage);
             let tempHealth = [...loadoutHealth];
-            tempHealth[validIndices[attackedIndex]] = Math.max(tempHealth[validIndices[attackedIndex]] - damage, 0);
+            tempHealth[attackedIndex] = Math.max(tempHealth[attackedIndex] - damage, 0);
             setLoadoutHealth(tempHealth);
         }, 2000)
 
         setTimeout(() => {
-            console.log("boss turn ended");
             setIsEnemyTurn(false);
             setEnemyTarget(-1);
             setGojoBuffCnt(gojoBuffCnt - 1);
         }, 3500);
     }, [isEnemyTurn]);
+    
+    useEffect(() => { // special abilities
+        console.log("got to initial special ability", isSpecialAbility, mainIndex);
+        if(!isSpecialAbility) return;
+        if(mainIndex == 2) setIsEnemyTurn(true);
+
+        let tempAbilityDamages = {...abilityDamages};
+        if(loadoutCards[mainIndex] == 'Sung-jin-woo'){
+            let healAmount = Math.floor(characterInfo.health['Sung-jin-woo'][cardLevels['Sung-jin-woo']-1] / 4); 
+            setLoadoutHealth(loadoutHealth.map((h, i) => {
+                if(h == 0) return 0;
+                return Math.min(h + healAmount, characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]);
+            }));
+        }
+        else if(loadoutCards[mainIndex] == 'Mikasa'){
+            setIsMikasaCharged(true);
+        }
+        else if(loadoutCards[mainIndex] == 'Luffy'){
+            if(luffyBuffCnt == 0){
+                tempAbilityDamages['Luffy'][0] *= 2; 
+                tempAbilityDamages['Luffy'][1] *= 2;
+                setAbilityDamages(tempAbilityDamages);
+            }
+            setLuffyBuffCnt(2);
+        }
+        else if(loadoutCards[mainIndex] == 'Gojo'){
+            setGojoBuffCnt(2);
+        }
+        else if(loadoutCards[mainIndex] == 'Natsu'){
+            if(natsuBuffCnt == 0){
+                tempAbilityDamages['Natsu'][0] *= 1.5; 
+                tempAbilityDamages['Natsu'][1] *= 1.5;
+                setAbilityDamages(tempAbilityDamages);
+            }
+            setNatsuBuffCnt(3);
+        }
+        handleRotation();
+        setIsSpecialAbility(false);
+    }, [isSpecialAbility]);
     useEffect(() => { // extra rotate for dead card
+        console.log('Extra rotate: ', mainIndex);
         if(isLevelLost) return;
         if(loadoutHealth[mainIndex] == 0){
             if(mainIndex == 2) setIsEnemyTurn(true);
@@ -142,44 +182,6 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             }, 500);
         }
     }, [mainIndex, loadoutHealth]);
-    useEffect(() => { // special abilities
-        console.log("got to initial special ability", isSpecialAbility, mainIndex);
-        if(!isSpecialAbility) return;
-        let prevIndex = (mainIndex + 2) % 3;
-        if(prevIndex == 2) setIsEnemyTurn(true);
-
-        let tempAbilityDamages = {...abilityDamages};
-        if(loadoutCards[prevIndex] == 'Sung-jin-woo'){
-            let healAmount = Math.floor(characterInfo.health['Sung-jin-woo'][cardLevels['Sung-jin-woo']-1] / 4); 
-            setLoadoutHealth(loadoutHealth.map((h, i) => {
-                if(h == 0) return 0;
-                return Math.min(h + healAmount, characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]);
-            }));
-        }
-        else if(loadoutCards[prevIndex] == 'Mikasa'){
-            setIsMikasaCharged(true);
-        }
-        else if(loadoutCards[prevIndex] == 'Luffy'){
-            if(luffyBuffCnt == 0){
-                tempAbilityDamages['Luffy'][0] *= 2; 
-                tempAbilityDamages['Luffy'][1] *= 2;
-                setAbilityDamages(tempAbilityDamages);
-            }
-            setLuffyBuffCnt(2);
-        }
-        else if(loadoutCards[prevIndex] == 'Gojo'){
-            setGojoBuffCnt(2);
-        }
-        else if(loadoutCards[prevIndex] == 'Natsu'){
-            if(natsuBuffCnt == 0){
-                tempAbilityDamages['Natsu'][0] *= 1.5; 
-                tempAbilityDamages['Natsu'][1] *= 1.5;
-                setAbilityDamages(tempAbilityDamages);
-            }
-            setNatsuBuffCnt(3);
-        }
-        setIsSpecialAbility(false);
-    }, [isSpecialAbility]);
 
     function handleRotation(){ // rotate cards
         const tempX = [...xTransform];
@@ -316,7 +318,6 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                         <div 
                         className='ability'
                         onClick={isClicking || isEnemyTurn ? null : () => {
-                            handleRotation();
                             setIsSpecialAbility(true);
                             setWasSpecialAbility(true);
                         }}>
