@@ -27,7 +27,7 @@
       'Sung-jin-woo': 'Shadows heal allies for a fraction of Sung-jin-woo\'s max health',
       'Mikasa': 'Mikasa\'s next attack has a chance to paralyze the enemy',
       'Luffy': 'Increases Luffy\'s damage for the next 2 rounds (does not stack)',
-      'Gojo': 'Gojo distorts space, evading attacks for the next 2 rounds',
+      'Gojo': 'Gojo distorts space, evading all attacks - duration increases with active allies',
       'Natsu': 'Natsu transforms, increasing damage and having a small chance to paralyze enemies for the next 3 rounds',
    },
    bgColors: {
@@ -68,7 +68,7 @@
       'Tanjiro': [2000, 4500, 5000],
       'Escanor': [2000, 4000, 7000],
       'Anderson': [2000, 4000, 6000, 9000],
-      'Korosensei': [2000, 4000, 6000, 8000, 11500],
+      'Korosensei': [2000, 4000, 6000, 8000, 11000],
       'Hisoka': [2000, 4000, 6000, 8000, 10000],
       'Saitama': [1000, 2000, 3000, 4000, 5000, 8000],
       'Sung-jin-woo': [400, 500, 600, 700, 800, 900],
