@@ -3,7 +3,8 @@ import '../styles/Card.css';
 import {motion} from 'framer-motion';
 import characterInfo from '../character-info';
 
-export default function LevelCard({name, enemyLevel, xTransform, yTransform, firstUpdate, loadoutIndex, isAlly, wasMainIndex, isMainIndex, cardLevels, enemyTarget = -1, health, wasSpecialAbility = false, isBuffed = false, isParalyzed = false}){
+export default function LevelCard({name, enemyLevel, xTransform, yTransform, firstUpdate, loadoutIndex, isAlly, wasMainIndex, isMainIndex, 
+    cardLevels, enemyTarget = -1, health, wasSpecialAbility = false, isBuffed = false, isParalyzed = false, isBurned = false}){
     const totalHealth = characterInfo.health[name][(isAlly ? cardLevels[name] : enemyLevel) -1];
     console.log("LevelCard rerender: ", health, totalHealth, isBuffed);
 
@@ -49,7 +50,8 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
             ease: 'easeInOut'
         }}>
             <div className={`level-card-wrapper ${isMainIndex ? 'scale-125' : 'scale-75'}`}>
-                {isParalyzed ? <p>PARALYZED</p> : null}
+                {isParalyzed ? <p style = {{color: 'yellow'}}>PARALYZED</p> : null}
+                {isBurned ? <p style = {{color: 'orange'}}>BURNED</p> : null}
                 <div className='card levels-card' id={name}
                 style = {{border: isParalyzed ? '2px solid #cdc17c' : isBuffed ? `1rem groove ${characterInfo.bgColors[name]}` : '1px solid black',
                           boxShadow: '0 0 15px 1px black'}}>

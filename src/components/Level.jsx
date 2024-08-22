@@ -25,9 +25,12 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     const [loadoutHealth, setLoadoutHealth] = useState(loadoutCards.map((card) => characterInfo.health[card][cardLevels[card]-1]));
     const [enemyHealth, setEnemyHealth] = useState(characterInfo.health[enemyName][enemyLevel-1]);
     const [abilityDamages, setAbilityDamages] = useState(characterInfo.abilityDamages);
-    const [isMikasaCharged, setIsMikasaCharged] = useState(false);
     const [isEnemyParalyzed, setIsEnemyParalyzed] = useState(false);
+    const [isEnemyBurned, setIsEnemyBurned] = useState(false);
+    const [isMikasaCharged, setIsMikasaCharged] = useState(false);
     const [luffyBuffCnt, setLuffyBuffCnt] = useState(0);
+    const [gojoBuffCnt, setGojoBuffCnt] = useState(0);
+    const [natsuBuffCnt, setNatsuBuffCnt] = useState(0);
     const numClicks = useRef(0);
     const mainCard = loadoutCards[mainIndex];
     console.log('Was special: ', wasSpecialAbility);
@@ -52,25 +55,36 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     useEffect(() => { // ally damage move
         if(!isClicking) return;
         setTimeout(() => {
-            setTimeout(() => {
+            setTimeout(() => { // damage and status effect calculations
                 let damage = Math.floor(getRandomInt(abilityDamages[mainCard][0], abilityDamages[mainCard][1]) 
-                * (1 + numClicks.current * 0.015));
+                * (1 + numClicks.current * 0.02));
 
+                let tempAbilityDamages = {...abilityDamages};
                 if(mainCard == 'Mikasa' && isMikasaCharged){
                     if(getRandomInt(0, 10) < 4) setIsEnemyParalyzed(true);
                     setIsMikasaCharged(false);
                 }
                 if(mainCard == 'Luffy'){
                     if(luffyBuffCnt == 1){
-                        let tempAbilityDamages = {...abilityDamages};
                         tempAbilityDamages['Luffy'][0] /= 2; 
                         tempAbilityDamages['Luffy'][1] /= 2;
                         setAbilityDamages(tempAbilityDamages);
                     }
                     setLuffyBuffCnt(Math.max(0, luffyBuffCnt - 1));
                 }
+                if(mainCard == 'Natsu'){
+                    setIsEnemyBurned(true);
+                    if(natsuBuffCnt > 1 && getRandomInt(0, 10) < 2) setIsEnemyParalyzed(true); 
+                    if(natsuBuffCnt == 1){
+                        tempAbilityDamages['Natsu'][0] /= 1.5; 
+                        tempAbilityDamages['Natsu'][1] /= 1.5;
+                        setAbilityDamages(tempAbilityDamages);
+                    }
+                    setNatsuBuffCnt(Math.max(0, natsuBuffCnt - 1));
+                }
                 setEnemyHealth(Math.max(enemyHealth - damage, 0));
             }, 400)
+
             if(mainIndex == 2) setIsEnemyTurn(true);
             handleRotation(); 
             numClicks.current = 0;
@@ -82,7 +96,14 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     useEffect(() => { // boss move
         console.log('boss turn use effect reached');
         if(!isEnemyTurn || isClicking || firstUpdate) return;
-        
+
+        if(isEnemyBurned){
+            console.log("wowww the enemy was burneeeeddddd");
+            setTimeout(() => {
+                setEnemyHealth(enemyHealth - getRandomInt(40, 60));
+                setIsEnemyBurned(false);
+            }, 500)
+        }
         if(isEnemyParalyzed){
             setIsEnemyParalyzed(false);
             setIsEnemyTurn(false);
@@ -98,6 +119,8 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         
         setTimeout(() => {
             let damage = getRandomInt(characterInfo.enemyAbilityDamages[enemyName][0], characterInfo.enemyAbilityDamages[enemyName][1]);
+            if(loadoutCards[attackedIndex] == 'Gojo' && gojoBuffCnt > 0) 
+                damage = 0;
             let tempHealth = [...loadoutHealth];
             tempHealth[validIndices[attackedIndex]] = Math.max(tempHealth[validIndices[attackedIndex]] - damage, 0);
             setLoadoutHealth(tempHealth);
@@ -107,6 +130,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             console.log("boss turn ended");
             setIsEnemyTurn(false);
             setEnemyTarget(-1);
+            setGojoBuffCnt(gojoBuffCnt - 1);
         }, 3500);
     }, [isEnemyTurn]);
     useEffect(() => { // extra rotate for dead card
@@ -123,8 +147,10 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         if(!isSpecialAbility) return;
         let prevIndex = (mainIndex + 2) % 3;
         if(prevIndex == 2) setIsEnemyTurn(true);
+
+        let tempAbilityDamages = {...abilityDamages};
         if(loadoutCards[prevIndex] == 'Sung-jin-woo'){
-            let healAmount = Math.floor(loadoutHealth[prevIndex] / 5); 
+            let healAmount = Math.floor(loadoutHealth[prevIndex] / 4); 
             setLoadoutHealth(loadoutHealth.map((h, i) => {
                 if(h == 0) return 0;
                 return Math.min(h + healAmount, characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]);
@@ -135,15 +161,26 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         }
         else if(loadoutCards[prevIndex] == 'Luffy'){
             if(luffyBuffCnt == 0){
-                let tempAbilityDamages = {...abilityDamages};
                 tempAbilityDamages['Luffy'][0] *= 2; 
                 tempAbilityDamages['Luffy'][1] *= 2;
                 setAbilityDamages(tempAbilityDamages);
             }
             setLuffyBuffCnt(2);
         }
+        else if(loadoutCards[prevIndex] == 'Gojo'){
+            setGojoBuffCnt(2);
+        }
+        else if(loadoutCards[prevIndex] == 'Natsu'){
+            if(natsuBuffCnt == 0){
+                tempAbilityDamages['Natsu'][0] *= 1.5; 
+                tempAbilityDamages['Natsu'][1] *= 1.5;
+                setAbilityDamages(tempAbilityDamages);
+            }
+            setNatsuBuffCnt(3);
+        }
         setIsSpecialAbility(false);
     }, [isSpecialAbility]);
+
     function handleRotation(){ // rotate cards
         const tempX = [...xTransform];
         const tempY = [...yTransform];
@@ -182,7 +219,9 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             cardLevels={cardLevels}
                             health={loadoutHealth[0]}
                             wasSpecialAbility={wasSpecialAbility}
-                            isBuffed={(isMikasaCharged && loadoutCards[0] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[0] == 'Luffy')}
+                            isBuffed={(isMikasaCharged && loadoutCards[0] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[0] == 'Luffy')
+                            || (gojoBuffCnt > 0 && loadoutCards[0] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[0] == 'Natsu')
+                            }
                             />
                             <LevelCard 
                             name={loadoutCards[1]} 
@@ -196,7 +235,9 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             cardLevels={cardLevels}
                             health={loadoutHealth[1]}
                             wasSpecialAbility={wasSpecialAbility}
-                            isBuffed={(isMikasaCharged && loadoutCards[1] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[1] == 'Luffy')}
+                            isBuffed={(isMikasaCharged && loadoutCards[1] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[1] == 'Luffy')
+                            || (gojoBuffCnt > 0 && loadoutCards[1] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[1] == 'Natsu')
+                            }
                             />
                             <LevelCard 
                             name={loadoutCards[2]} 
@@ -210,7 +251,9 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             cardLevels={cardLevels}
                             health={loadoutHealth[2]}
                             wasSpecialAbility={wasSpecialAbility}
-                            isBuffed={(isMikasaCharged && loadoutCards[2] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[2] == 'Luffy')}
+                            isBuffed={(isMikasaCharged && loadoutCards[2] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[2] == 'Luffy')
+                            || (gojoBuffCnt > 0 && loadoutCards[2] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[2] == 'Natsu')
+                            }
                             />
                         </div>
                     </div>
@@ -227,11 +270,12 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                         enemyTarget={enemyTarget}
                         health={enemyHealth}
                         isParalyzed={isEnemyParalyzed}
+                        isBurned={isEnemyBurned}
                         />
                     </div>
                     <button className='game-clicker' style={{ background: characterInfo.bgColors[mainCard]}} 
                     onClick={!isClicking || isEnemyTurn ? null : () => {
-                        numClicks.current += 1.5;
+                        numClicks.current += 2;
                         setDisplayClicks(numClicks.current); // force rerender
                     }}>
                         {
