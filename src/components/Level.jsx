@@ -63,7 +63,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
 
                 let tempAbilityDamages = {...abilityDamages};
                 if(mainCard == 'Mikasa' && isMikasaCharged){
-                    if(getRandomInt(0, 10) < 3) setIsEnemyParalyzed(true);
+                    if(getRandomInt(0, 10) < 2) setIsEnemyParalyzed(true);
                     setIsMikasaCharged(false);
                 }
                 if(mainCard == 'Luffy'){
@@ -76,7 +76,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                 }
                 if(mainCard == 'Natsu'){
                     setIsEnemyBurned(true);
-                    if(natsuBuffCnt > 1 && getRandomInt(0, 10) < 1) setIsEnemyParalyzed(true); 
+                    if(natsuBuffCnt > 1 && getRandomInt(0, 20) < 1) setIsEnemyParalyzed(true); 
                     if(natsuBuffCnt == 1){
                         tempAbilityDamages['Natsu'][0] /= 1.5; 
                         tempAbilityDamages['Natsu'][1] /= 1.5;
@@ -112,10 +112,19 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         }
 
         let validIndices = [];
+        let curMin = 20000;
+        let curMinIndex = 0;
         loadoutHealth.forEach((e, i) => {
-            if(e != 0) validIndices.push(i);
+            if(e > 0){
+                validIndices.push(i);
+                if(e <= curMin && e < characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]){
+                    curMin = e;
+                    curMinIndex = i;
+                }
+            }
         });
-        let attackedIndex = validIndices[getRandomInt(0, validIndices.length)];
+        let attackedIndex = curMin != 20000 && getRandomInt(0, 10) < 5 ? curMinIndex 
+        : validIndices[getRandomInt(0, validIndices.length)];
         setEnemyTarget(attackedIndex);
         
         setTimeout(() => {
@@ -142,7 +151,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
 
         let tempAbilityDamages = {...abilityDamages};
         if(loadoutCards[mainIndex] == 'Sung-jin-woo'){
-            let healAmount = Math.floor(characterInfo.health['Sung-jin-woo'][cardLevels['Sung-jin-woo']-1] / 4); 
+            let healAmount = Math.floor(characterInfo.health['Sung-jin-woo'][cardLevels['Sung-jin-woo']-1] / 5); 
             setLoadoutHealth(loadoutHealth.map((h, i) => {
                 if(h == 0) return 0;
                 return Math.min(h + healAmount, characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]);
@@ -160,7 +169,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             setLuffyBuffCnt(2);
         }
         else if(loadoutCards[mainIndex] == 'Gojo'){
-            setGojoBuffCnt(2);
+            setGojoBuffCnt(getNumAlive() - 1);
         }
         else if(loadoutCards[mainIndex] == 'Natsu'){
             if(natsuBuffCnt == 0){
@@ -203,6 +212,14 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         return minRandom + Math.floor(Math.random() * (maxRandom - minRandom));
     }
 
+    function getNumAlive(){
+        let numAlive = 3;
+        loadoutHealth.forEach((hp) => {
+            if(hp == 0)
+                numAlive--;
+        })
+        return numAlive;
+    }
     return (
         <>
             {isLevelBeat ? <VictoryOverlay levelNumber={levelNumber} stagesComplete={stagesComplete} setStagesComplete={setStagesComplete}
