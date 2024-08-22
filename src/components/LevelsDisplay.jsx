@@ -45,8 +45,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(2) || stagesComplete.includes(3) ? () => navigate('/play/levels/4') : null} 
                         style={stagesComplete.includes(2) || stagesComplete.includes(3) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[3]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[3]} </p>
                             </div>
                         </button>
                     </div>
@@ -57,8 +57,8 @@ export default function LevelsDisplay({stagesComplete}){
                         <button className='level-button' onClick={stagesComplete.includes(4)  ? () => navigate('/play/levels/5') : null} 
                         style={stagesComplete.includes(4) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
-                                <p className='level-title'>Kirito</p>
-                                <p className='level-caption'>Black Swordsman </p>
+                                <p className='level-title'>{characterInfo.bossNames[4]}</p>
+                                <p className='level-caption'>{characterInfo.bossDescriptions[4]} </p>
                             </div>
                         </button>
                     </div>

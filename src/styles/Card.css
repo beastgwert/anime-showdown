@@ -68,6 +68,14 @@
     background: linear-gradient(#6CCC74, #150911);
 }
 
+#Escanor {
+    background: linear-gradient(#E29A48, #150911);;
+}
+
+#Anderson {
+    background: linear-gradient(#d8e386, #150911);
+}
+
 #Gojo {
     background: linear-gradient(#dce8a3, #090a15);
 }

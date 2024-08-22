@@ -150,7 +150,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
 
         let tempAbilityDamages = {...abilityDamages};
         if(loadoutCards[prevIndex] == 'Sung-jin-woo'){
-            let healAmount = Math.floor(loadoutHealth[prevIndex] / 4); 
+            let healAmount = Math.floor(characterInfo.health['Sung-jin-woo'][cardLevels['Sung-jin-woo']-1] / 4); 
             setLoadoutHealth(loadoutHealth.map((h, i) => {
                 if(h == 0) return 0;
                 return Math.min(h + healAmount, characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]);
@@ -268,7 +268,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                         isAlly={false}
                         cardLevels={cardLevels}
                         enemyTarget={enemyTarget}
-                        health={enemyHealth}
+                        health={isLevelBeat ? 0 : enemyHealth}
                         isParalyzed={isEnemyParalyzed}
                         isBurned={isEnemyBurned}
                         />
