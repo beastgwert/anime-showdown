@@ -25,13 +25,13 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
         } : 
         isParalyzed ? null
         :
-        enemyTarget == 0 ? {
+        yTransform[enemyTarget] == -10 ? {
             transform: [null, null, 'translateX(-30rem) translateY(-10rem)', 'translateX(30rem) translateY(-10rem)']
         } :
-        enemyTarget == 1 ? {
+        yTransform[enemyTarget] == -25 ? {
             transform: [null, null, 'translateX(-50rem) translateY(-20rem)', 'translateX(30rem) translateY(-10rem)']
         } :
-        enemyTarget == 2 ? {
+        yTransform[enemyTarget] == 5 ? {
             transform: [null, null, 'translateX(-50rem) translateY(0rem)', 'translateX(30rem) translateY(-10rem)']
         } : null
         }

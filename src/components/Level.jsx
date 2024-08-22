@@ -16,6 +16,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     const [yTransform, setYTransform] = useState([-10, -25, 5]);
     const [mainIndex, setMainIndex] = useState(0);
     const [firstUpdate, setFirstUpdate] = useState(true);
+    const [isRotating, setIsRotating] = useState(false);
     const [isClicking, setIsClicking] = useState(false);
     const [isSpecialAbility, setIsSpecialAbility] = useState(false);
     const [wasSpecialAbility, setWasSpecialAbility] = useState(false);
@@ -95,8 +96,8 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         }, 4000);
     }, [isClicking]);
     useEffect(() => { // boss move
-        console.log('boss turn use effect reached');
-        if(!isEnemyTurn || isClicking || firstUpdate) return;
+        console.log('boss turn use effect reached', mainIndex);
+        if(!isEnemyTurn || isClicking || firstUpdate || isRotating) return;
 
         if(isEnemyBurned){
             setTimeout(() => {
@@ -121,7 +122,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             let damage = getRandomInt(characterInfo.enemyAbilityDamages[enemyName][0], characterInfo.enemyAbilityDamages[enemyName][1]);
             if(loadoutCards[attackedIndex] == 'Gojo' && gojoBuffCnt > 0) 
                 damage = 0;
-            console.log("Boss damage: ", attackedIndex, gojoBuffCnt, damage);
+            console.log("Boss damage: ", attackedIndex, gojoBuffCnt, damage, xTransform, yTransform);
             let tempHealth = [...loadoutHealth];
             tempHealth[attackedIndex] = Math.max(tempHealth[attackedIndex] - damage, 0);
             setLoadoutHealth(tempHealth);
@@ -132,7 +133,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             setEnemyTarget(-1);
             setGojoBuffCnt(gojoBuffCnt - 1);
         }, 3500);
-    }, [isEnemyTurn]);
+    }, [isEnemyTurn, isRotating]);
     
     useEffect(() => { // special abilities
         console.log("got to initial special ability", isSpecialAbility, mainIndex);
@@ -174,14 +175,15 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     }, [isSpecialAbility]);
     useEffect(() => { // extra rotate for dead card
         console.log('Extra rotate: ', mainIndex);
-        if(isLevelLost) return;
+        if(isLevelLost || enemyTarget != -1) return;
         if(loadoutHealth[mainIndex] == 0){
-            if(mainIndex == 2) setIsEnemyTurn(true);
             setTimeout(() => {
+                if(mainIndex == 2) setIsEnemyTurn(true);
+                setIsRotating(false);
                 handleRotation();
-            }, 500);
+            }, 400);
         }
-    }, [mainIndex, loadoutHealth]);
+    }, [mainIndex, loadoutHealth, enemyTarget]);
 
     function handleRotation(){ // rotate cards
         const tempX = [...xTransform];
@@ -193,10 +195,11 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         setXTransform(tempX);
         setYTransform(tempY);
         setFirstUpdate(false);
+        if(loadoutHealth[(mainIndex + 1) % 3] == 0) setIsRotating(true);
         setMainIndex((mainIndex + 1) % 3);
     }
 
-    function getRandomInt(minRandom, maxRandom){
+    function getRandomInt(minRandom, maxRandom){ // random int from [minRandom, maxRandom - 1]
         return minRandom + Math.floor(Math.random() * (maxRandom - minRandom));
     }
 

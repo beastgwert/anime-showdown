@@ -18,7 +18,7 @@
       'Doflamingo': [300, 400],
       'Tanjiro': [240, 280],
       'Escanor': [400, 450],
-      'Anderson': [500, 501],
+      'Anderson': [1500, 1501],
    },
    abilityDescription: {
       'Sung-jin-woo': 'Shadows heal allies for a fraction of Sung-jin-woo\'s max health',
