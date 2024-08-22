@@ -5,6 +5,7 @@
       'Luffy': ['Gum-Gum: Pistol', 'Gear 3'],
       'Gojo': ['Hand-to-hand Combat', 'Limitless'],
       'Natsu': ['Fire Dragon\'s Claws', 'Lightning Fire Dragon'],
+      'Ichigo': ['Getsuga Tensho', 'Zanpakuto'],
    },
    abilityDamages: {
       'Sung-jin-woo': [160, 200],
@@ -12,6 +13,7 @@
       'Luffy': [110, 130],
       'Gojo': [100, 200],
       'Natsu': [120, 130],
+      'Ichigo': [0, 10],
    },
    enemyAbilityDamages: {
       'Kirito': [200, 250],
@@ -29,6 +31,7 @@
       'Luffy': 'Increases Luffy\'s damage for the next 2 rounds (does not stack)',
       'Gojo': 'Gojo distorts space, evading all attacks - duration increases with active allies',
       'Natsu': 'Natsu transforms, increasing damage and having a small chance to paralyze enemies for the next 3 rounds',
+      'Ichigo': 'Ichigo summons his Zangetsu and his next attack deals 1/3 of the enemy\'s remaining health',
    },
    bgColors: {
       'Kirito': '#0A20A0',
@@ -76,6 +79,7 @@
       'Luffy': [450, 600, 750, 900, 1050, 1200],
       'Gojo': [450, 600, 750, 900, 1050, 1200],
       'Natsu': [500, 675, 850, 1025, 1200, 1375],
+      'Ichigo': [500, 675, 850, 1025, 1200, 1375],
    },
    bossNames: ['Kirito', 'Doflamingo', 'Tanjiro', 'Escanor', 'Anderson', 'Korosensei', 'Hisoka', 'Saitama'],
    bossDescriptions: ['Black Swordsman', 'Joker', 'Demon Slayer', 'Sin of Pride', 'Father', 'Tentacled Menace', 'Bungee Gum', 'One Punch Man'],

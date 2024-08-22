@@ -32,6 +32,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     const [luffyBuffCnt, setLuffyBuffCnt] = useState(0);
     const [gojoBuffCnt, setGojoBuffCnt] = useState(0);
     const [natsuBuffCnt, setNatsuBuffCnt] = useState(0);
+    const [ichigoBuffCnt, setIchigoBuffCnt] = useState(0);
     const numClicks = useRef(0);
     const mainCard = loadoutCards[mainIndex];
     console.log('Was special: ', wasSpecialAbility);
@@ -60,6 +61,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             setTimeout(() => { // damage and status effect calculations
                 let damage = Math.floor(getRandomInt(abilityDamages[mainCard][0], abilityDamages[mainCard][1]) 
                 * (1 + numClicks.current * 0.02));
+                let skipDamage = false;
 
                 let tempAbilityDamages = {...abilityDamages};
                 if(mainCard == 'Mikasa' && isMikasaCharged){
@@ -84,7 +86,14 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                     }
                     setNatsuBuffCnt(Math.max(0, natsuBuffCnt - 1));
                 }
-                setEnemyHealth(Math.max(enemyHealth - damage, 0));
+                if(mainCard == 'Ichigo'){
+                    if(ichigoBuffCnt == 1){
+                        setEnemyHealth(Math.max(0, Math.floor((2/3) * enemyHealth)));
+                        skipDamage = true;
+                        setIchigoBuffCnt(0);
+                    }
+                }
+                if(!skipDamage) setEnemyHealth(Math.max(enemyHealth - damage, 0));
             }, 400)
 
             if(mainIndex == 2) setIsEnemyTurn(true);
@@ -179,6 +188,9 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             }
             setNatsuBuffCnt(3);
         }
+        else if(loadoutCards[mainIndex] == 'Ichigo'){
+            setIchigoBuffCnt(1);
+        }
         handleRotation();
         setIsSpecialAbility(false);
     }, [isSpecialAbility]);
@@ -242,7 +254,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             health={loadoutHealth[0]}
                             wasSpecialAbility={wasSpecialAbility}
                             isBuffed={(isMikasaCharged && loadoutCards[0] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[0] == 'Luffy')
-                            || (gojoBuffCnt > 0 && loadoutCards[0] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[0] == 'Natsu')
+                            || (gojoBuffCnt > 0 && loadoutCards[0] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[0] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[0] == 'Ichigo')
                             }
                             />
                             <LevelCard 
@@ -258,7 +270,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             health={loadoutHealth[1]}
                             wasSpecialAbility={wasSpecialAbility}
                             isBuffed={(isMikasaCharged && loadoutCards[1] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[1] == 'Luffy')
-                            || (gojoBuffCnt > 0 && loadoutCards[1] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[1] == 'Natsu')
+                            || (gojoBuffCnt > 0 && loadoutCards[1] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[1] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[1] == 'Ichigo')
                             }
                             />
                             <LevelCard 
@@ -274,7 +286,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             health={loadoutHealth[2]}
                             wasSpecialAbility={wasSpecialAbility}
                             isBuffed={(isMikasaCharged && loadoutCards[2] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[2] == 'Luffy')
-                            || (gojoBuffCnt > 0 && loadoutCards[2] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[2] == 'Natsu')
+                            || (gojoBuffCnt > 0 && loadoutCards[2] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[2] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[2] == 'Ichigo')
                             }
                             />
                         </div>
@@ -331,7 +343,9 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             style = {isClicking ? {color: 'black', transform: 'scale(0.9)' } : null}>
                                 <p className='ability-title '>{characterInfo.abilities[mainCard][0]}</p>
                                 <p className='ability-description ability-damage'>
-                                    {abilityDamages[mainCard][0]} - {abilityDamages[mainCard][1]} 
+                                    {mainCard == 'Ichigo' && ichigoBuffCnt > 0 ? <>?</> :
+                                    <>{abilityDamages[mainCard][0]} - {abilityDamages[mainCard][1]} </>
+                                    }
                                 </p>
                             </div>
                         </div>
