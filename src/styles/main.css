@@ -22,7 +22,7 @@ html {
     .cards-page {
         zoom: 1;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 0.75rem;
     }
     .page-footer p{
@@ -37,7 +37,7 @@ html {
     .cards-page {
         zoom: 1.1;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 0.85rem;
     }
     .page-footer p{
@@ -64,7 +64,7 @@ html {
     .level-title{
         font-size: 2.8rem;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 1rem;
     }
     .page-footer p{
@@ -91,7 +91,7 @@ html {
     .level-title{
         font-size: 3rem;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 1.3rem;
     }
     .page-footer p{
@@ -118,7 +118,7 @@ html {
     .level-title{
         font-size: 3.2rem;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 1.6rem;
     }
     .page-footer p{
@@ -145,7 +145,7 @@ html {
     .level-title{
         font-size: 3.6rem;   
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 1.8rem;
     }
     .page-footer p{
@@ -172,7 +172,7 @@ html {
     .level-title{
         font-size: 4rem;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 2rem;
     }
     .page-footer p{
@@ -199,7 +199,7 @@ html {
     .level-title{
         font-size: 4rem;
     }
-    .level-caption{
+    .level-caption.level-caption{
         font-size: 2rem;
     }
     .page-footer p{

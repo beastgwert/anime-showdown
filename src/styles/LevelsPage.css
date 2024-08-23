@@ -45,6 +45,7 @@
 .level-caption {
     font-weight: 100;
     font-style: italic;
+    font-size: 0.75rem;
 }
 .level-button:hover {
     /* transform: scale(0.9); */
