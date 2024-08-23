@@ -28,11 +28,13 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     const [abilityDamages, setAbilityDamages] = useState(characterInfo.abilityDamages);
     const [isEnemyParalyzed, setIsEnemyParalyzed] = useState(false);
     const [isEnemyBurned, setIsEnemyBurned] = useState(false);
+    const [isEnemyConfused, setIsEnemyConfused] = useState(false);
     const [isMikasaCharged, setIsMikasaCharged] = useState(false);
     const [luffyBuffCnt, setLuffyBuffCnt] = useState(0);
     const [gojoBuffCnt, setGojoBuffCnt] = useState(0);
     const [natsuBuffCnt, setNatsuBuffCnt] = useState(0);
     const [ichigoBuffCnt, setIchigoBuffCnt] = useState(0);
+    const [kakashiBuffCnt, setKakashiBuffCnt] = useState(0);
     const numClicks = useRef(0);
     const mainCard = loadoutCards[mainIndex];
     console.log('Was special: ', wasSpecialAbility);
@@ -78,7 +80,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                 }
                 if(mainCard == 'Natsu'){
                     setIsEnemyBurned(true);
-                    if(natsuBuffCnt > 1 && getRandomInt(0, 20) < 1) setIsEnemyParalyzed(true); 
+                    if(natsuBuffCnt >= 1 && getRandomInt(0, 20) < 1) setIsEnemyParalyzed(true); 
                     if(natsuBuffCnt == 1){
                         tempAbilityDamages['Natsu'][0] /= 1.5; 
                         tempAbilityDamages['Natsu'][1] /= 1.5;
@@ -88,10 +90,14 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                 }
                 if(mainCard == 'Ichigo'){
                     if(ichigoBuffCnt == 1){
-                        setEnemyHealth(Math.max(0, Math.floor((2/3) * enemyHealth)));
                         skipDamage = true;
+                        setEnemyHealth(Math.max(0, Math.floor((2/3) * enemyHealth)));
                         setIchigoBuffCnt(0);
                     }
+                }
+                if(mainCard == 'Kakashi'){
+                    if(kakashiBuffCnt >= 1 && getRandomInt(0, 10) < 2) damage *= 2;
+                    setKakashiBuffCnt(Math.max(0, kakashiBuffCnt - 1));
                 }
                 if(!skipDamage) setEnemyHealth(Math.max(enemyHealth - damage, 0));
             }, 400)
@@ -138,11 +144,24 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         
         setTimeout(() => {
             let damage = getRandomInt(characterInfo.enemyAbilityDamages[enemyName][0], characterInfo.enemyAbilityDamages[enemyName][1]);
-            if(loadoutCards[attackedIndex] == 'Gojo' && gojoBuffCnt > 0) 
+            if((loadoutCards[attackedIndex] == 'Gojo' && gojoBuffCnt > 0) || (loadoutCards[attackedIndex] == 'Kakashi' && kakashiBuffCnt > 0 && getRandomInt(0, 10) < 2)
+            || (isEnemyConfused && getRandomInt(0, 10) < 3))
                 damage = 0;
+            if(loadoutCards.includes('Anya')) 
+                damage = Math.floor(damage * 0.75);
             console.log("Boss damage: ", attackedIndex, gojoBuffCnt, damage, xTransform, yTransform);
+
             let tempHealth = [...loadoutHealth];
-            tempHealth[attackedIndex] = Math.max(tempHealth[attackedIndex] - damage, 0);
+            if(loadoutCards[attackedIndex] == 'Makima'){
+                tempHealth.forEach((hp, i) => {
+                    tempHealth[i] = Math.max(0, hp - Math.floor(damage / getNumAlive()));
+                })
+            }
+            else{
+                tempHealth[attackedIndex] = Math.max(tempHealth[attackedIndex] - damage, 0);
+            }
+
+            if(isEnemyConfused) setIsEnemyConfused(false);
             setLoadoutHealth(tempHealth);
         }, 2000)
 
@@ -159,17 +178,17 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         if(mainIndex == 2) setIsEnemyTurn(true);
 
         let tempAbilityDamages = {...abilityDamages};
-        if(loadoutCards[mainIndex] == 'Sung-jin-woo'){
+        if(mainCard == 'Sung-jin-woo'){
             let healAmount = Math.floor(characterInfo.health['Sung-jin-woo'][cardLevels['Sung-jin-woo']-1] / 5); 
             setLoadoutHealth(loadoutHealth.map((h, i) => {
                 if(h == 0) return 0;
                 return Math.min(h + healAmount, characterInfo.health[loadoutCards[i]][cardLevels[loadoutCards[i]]-1]);
             }));
         }
-        else if(loadoutCards[mainIndex] == 'Mikasa'){
+        else if(mainCard == 'Mikasa'){
             setIsMikasaCharged(true);
         }
-        else if(loadoutCards[mainIndex] == 'Luffy'){
+        else if(mainCard == 'Luffy'){
             if(luffyBuffCnt == 0){
                 tempAbilityDamages['Luffy'][0] *= 2; 
                 tempAbilityDamages['Luffy'][1] *= 2;
@@ -177,10 +196,10 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             }
             setLuffyBuffCnt(2);
         }
-        else if(loadoutCards[mainIndex] == 'Gojo'){
+        else if(mainCard == 'Gojo'){
             setGojoBuffCnt(getNumAlive() - 1);
         }
-        else if(loadoutCards[mainIndex] == 'Natsu'){
+        else if(mainCard == 'Natsu'){
             if(natsuBuffCnt == 0){
                 tempAbilityDamages['Natsu'][0] *= 1.5; 
                 tempAbilityDamages['Natsu'][1] *= 1.5;
@@ -188,8 +207,20 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
             }
             setNatsuBuffCnt(3);
         }
-        else if(loadoutCards[mainIndex] == 'Ichigo'){
+        else if(mainCard == 'Ichigo'){
             setIchigoBuffCnt(1);
+        }
+        else if(mainCard == 'Kakashi'){
+            setKakashiBuffCnt(3);
+        }
+        else if(mainCard == 'Mudkip'){
+            setIsEnemyConfused(true);
+        }
+        else if(mainCard == 'Genos'){
+            setEnemyHealth(Math.max(0, enemyHealth - 4 * loadoutHealth[mainIndex]));
+            let tempHealth = [...loadoutHealth];
+            tempHealth[mainIndex] = 0;
+            setLoadoutHealth(tempHealth);
         }
         handleRotation();
         setIsSpecialAbility(false);
@@ -255,6 +286,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             wasSpecialAbility={wasSpecialAbility}
                             isBuffed={(isMikasaCharged && loadoutCards[0] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[0] == 'Luffy')
                             || (gojoBuffCnt > 0 && loadoutCards[0] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[0] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[0] == 'Ichigo')
+                            || (kakashiBuffCnt > 0 && loadoutCards[0] == 'Kakashi')
                             }
                             />
                             <LevelCard 
@@ -271,6 +303,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             wasSpecialAbility={wasSpecialAbility}
                             isBuffed={(isMikasaCharged && loadoutCards[1] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[1] == 'Luffy')
                             || (gojoBuffCnt > 0 && loadoutCards[1] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[1] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[1] == 'Ichigo')
+                            || (kakashiBuffCnt > 0 && loadoutCards[1] == 'Kakashi')
                             }
                             />
                             <LevelCard 
@@ -287,6 +320,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             wasSpecialAbility={wasSpecialAbility}
                             isBuffed={(isMikasaCharged && loadoutCards[2] == 'Mikasa') || (luffyBuffCnt > 0 && loadoutCards[2] == 'Luffy')
                             || (gojoBuffCnt > 0 && loadoutCards[2] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[2] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[2] == 'Ichigo')
+                            || (kakashiBuffCnt > 0 && loadoutCards[2] == 'Kakashi')
                             }
                             />
                         </div>
@@ -305,6 +339,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                         health={isLevelBeat ? 0 : enemyHealth}
                         isParalyzed={isEnemyParalyzed}
                         isBurned={isEnemyBurned}
+                        isConfused={isEnemyConfused}
                         />
                     </div>
                     <button className='game-clicker' style={{ background: characterInfo.bgColors[mainCard]}} 
@@ -351,7 +386,8 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                         </div>
                         <div 
                         className='ability'
-                        onClick={isClicking || isEnemyTurn ? null : () => {
+                        onClick={isClicking || isEnemyTurn || mainCard == 'Anya' || mainCard == 'Makima' || 
+                            (mainCard == 'Genos' && loadoutHealth[mainIndex] == characterInfo.health['Genos'][cardLevels['Genos']-1]) ? null : () => {
                             setIsSpecialAbility(true);
                             setWasSpecialAbility(true);
                         }}>
