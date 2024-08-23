@@ -59,7 +59,8 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         }
     }, [viewportSwitch])
     useEffect(() => { // change background
-        setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, ${characterInfo.bgColors[enemyName]})`)
+        if(!isTabletOrMobile) setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, ${characterInfo.bgColors[enemyName]})`);
+        else setBgColor(`linear-gradient(to top, ${characterInfo.bgColors[mainCard]}, ${characterInfo.bgColors[enemyName]})`);
         setBgImage(''); 
     });
     
