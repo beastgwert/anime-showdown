@@ -4,6 +4,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    overflow-x: auto;
 }
 .levels-card.levels-card {
     box-shadow: 0 0 20px black;
