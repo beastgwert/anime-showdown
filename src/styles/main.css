@@ -19,7 +19,7 @@ html {
     html{
         font-size: 80%;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1;
     }
     .level-caption.level-caption{
@@ -34,7 +34,7 @@ html {
     html{
         font-size: 70%;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.1;
     }
     .level-caption.level-caption{
@@ -55,7 +55,7 @@ html {
     .homepage-content {
         gap: 1.4rem;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.2;
     }
     .level {
@@ -82,7 +82,7 @@ html {
     .homepage-content {
         gap: 1.8rem;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.3;
     }
     .level {
@@ -109,7 +109,7 @@ html {
     .homepage-content {
         gap: 2.2rem;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.4;
     }
     .level {
@@ -136,7 +136,7 @@ html {
     .homepage-content {
         gap: 2.6rem;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.4;
     }
     .level {
@@ -163,7 +163,7 @@ html {
     .homepage-content {
         gap: 3rem;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.5;
     }
     .level {
@@ -190,7 +190,7 @@ html {
     .homepage-content {
         gap: 3rem;
     }
-    .cards-page {
+    .cards-page, .credits-page {
         zoom: 1.5;
     }
     .level {

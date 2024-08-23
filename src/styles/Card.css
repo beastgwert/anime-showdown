@@ -3,6 +3,10 @@
     position: relative;
 }
 
+.cards-card {
+    cursor: pointer;
+}
+
 .level-up-button {
     position: absolute;
     background: black;
@@ -130,7 +134,4 @@
 
 #Makima {
     background: linear-gradient(#9bdfc3, #041313);
-}
-.card:hover {
-    cursor: pointer;
 }
