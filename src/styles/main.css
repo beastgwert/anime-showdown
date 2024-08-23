@@ -37,6 +37,12 @@ html {
     html{
         font-size: 60%;
     }
+    .homepage-main p {
+        transform: scale(1.2);
+    }
+    .homepage-content {
+        gap: 1.4rem;
+    }
     .cards-page {
         zoom: 1.2;
     }
@@ -48,6 +54,12 @@ html {
 @media (max-width: 1000px) {
     html {
         font-size: 50%;
+    }
+    .homepage-main p {
+        transform: scale(1.3);
+    }
+    .homepage-content {
+        gap: 1.8rem;
     }
     .cards-page {
         zoom: 1.3;
@@ -61,6 +73,12 @@ html {
     html {
         font-size: 40%;
     }
+    .homepage-main p {
+        transform: scale(1.4);
+    }
+    .homepage-content {
+        gap: 2.2rem;
+    }
     .cards-page {
         zoom: 1.4;
     }
@@ -72,6 +90,12 @@ html {
 @media (max-width: 650px) {
     html {
         font-size: 35%;
+    }
+    .homepage-main p {
+        transform: scale(1.4);
+    }
+    .homepage-content {
+        gap: 2.6rem;
     }
     .cards-page {
         zoom: 1.4;
@@ -85,6 +109,12 @@ html {
     html {
         font-size: 30%;
     }
+    .homepage-main p {
+        transform: scale(1.5);
+    }
+    .homepage-content {
+        gap: 3rem;
+    }
     .cards-page {
         zoom: 1.5;
     }
@@ -96,6 +126,12 @@ html {
 @media (max-width: 450px) {
     html {
         font-size: 25%;
+    }
+    .homepage-main p {
+        transform: scale(1.5);
+    }
+    .homepage-content {
+        gap: 3rem;
     }
     .cards-page {
         zoom: 1.5;
