@@ -23,7 +23,7 @@ html {
         zoom: 1;
     }
     .level-caption{
-        font-size: 1rem;
+        font-size: 0.75rem;
     }
     .page-footer p{
         font-size: 1rem;
@@ -38,7 +38,7 @@ html {
         zoom: 1.1;
     }
     .level-caption{
-        font-size: 1rem;
+        font-size: 0.85rem;
     }
     .page-footer p{
         font-size: 1rem;
@@ -65,7 +65,7 @@ html {
         font-size: 2.8rem;
     }
     .level-caption{
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     .page-footer p{
         font-size: 1rem;
@@ -92,7 +92,7 @@ html {
         font-size: 3rem;
     }
     .level-caption{
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     .page-footer p{
         font-size: 1.1rem;
