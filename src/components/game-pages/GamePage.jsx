@@ -46,7 +46,7 @@ export default function GamePage(){
         // check if user exists
         var tempUserExists = false;
         // change fetch url to https://anime-showdown.up.railway.app for prod and http://localhost:8080 for dev
-        await fetch("https://anime-showdown.up.railway.app/api/userExists?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
+        await fetch("http://localhost:8080/api/userExists?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
             .then((res) => res.json())
             .then((data) => {tempUserExists = data;})
             .catch((error) => console.log(error));
@@ -54,7 +54,7 @@ export default function GamePage(){
         // add new player if not in database
         if(!tempUserExists){
             console.log("passed info: ", loadoutCards, inventoryCards)
-            await fetch("https://anime-showdown.up.railway.app/api", {
+            await fetch("http://localhost:8080/api", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -75,7 +75,7 @@ export default function GamePage(){
         }
         console.log("got to update existing player: ");
         // update existing player
-        await fetch("https://anime-showdown.up.railway.app/api?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
+        await fetch("http://localhost:8080/api?" + new URLSearchParams({email: userInfo.email}).toString(), { mode: "cors"})
         .then((res) => res.json())
         .then((data) => {
             setPlayerInfo(data.playerInfo);
@@ -95,7 +95,7 @@ export default function GamePage(){
         if(firstUpdate) return;
         
         console.log("got to handle cards", loadoutCards, inventoryCards);
-        await fetch("https://anime-showdown.up.railway.app/api/update/cards", {
+        await fetch("http://localhost:8080/api/update/cards", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -113,7 +113,7 @@ export default function GamePage(){
         if(firstUpdate) return;
 
         console.log("got to handle stages", stagesComplete);
-        await fetch("https://anime-showdown.up.railway.app/api/update/stages", {
+        await fetch("http://localhost:8080/api/update/stages", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -129,7 +129,7 @@ export default function GamePage(){
         if(firstUpdate) return;
 
         console.log("got to level points:", levelPoints);
-        await fetch("https://anime-showdown.up.railway.app/api/update/levelPoints", {
+        await fetch("http://localhost:8080/api/update/levelPoints", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

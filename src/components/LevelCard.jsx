@@ -9,9 +9,9 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
     const totalHealth = characterInfo.health[name][(isAlly ? cardLevels[name] : enemyLevel) -1];
 
     const allyInitial = `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`
-    const enemyInitial = !isTabletOrMobile ? 'translateX(30rem) translateY(-10rem)' : 'translateX(-6rem) translateY(-50rem)';
+    const enemyInitial = !isTabletOrMobile ? 'translateX(30rem) translateY(-10rem)' : 'translateX(-5rem) translateY(-30rem)';
     const allyAttackAnimate = !isTabletOrMobile ? [null, 'translateX(80rem) translateY(-5rem)', `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`] :
-    [null, 'translateX(-6rem) translateY(-50rem)', `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`];
+    [null, 'translateX(-5rem) translateY(-30rem)', `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`];
     console.log("LevelCard rerender: ", health, totalHealth, isBuffed);
 
     return (
@@ -31,17 +31,17 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
         } : 
         isParalyzed ? null
         :
-        (!isTabletOrMobile && yTransform[enemyTarget] == -10) || (isTabletOrMobile && xTransform[enemyTarget] == -6) ? {
+        (!isTabletOrMobile && yTransform[enemyTarget] == -10) || (isTabletOrMobile && xTransform[enemyTarget] == -5) ? {
             transform: !isTabletOrMobile ? [null, null, 'translateX(-30rem) translateY(-10rem)', 'translateX(30rem) translateY(-10rem)']
-            : [null, null, 'translateX(-6rem) translateY(20rem)', 'translateX(-6rem) translateY(-50rem)']
+            : [null, null, 'translateX(-5rem) translateY(15rem)', 'translateX(-5rem) translateY(-30rem)']
         } :
-        (!isTabletOrMobile && yTransform[enemyTarget] == -25) || (isTabletOrMobile && xTransform[enemyTarget] == 9) ? {
+        (!isTabletOrMobile && yTransform[enemyTarget] == -25) || (isTabletOrMobile && xTransform[enemyTarget] == 10) ? {
             transform: !isTabletOrMobile ? [null, null, 'translateX(-50rem) translateY(-20rem)', 'translateX(30rem) translateY(-10rem)']
-            : [null, null, 'translateX(9rem) translateY(40rem)', 'translateX(-6rem) translateY(-50rem)']
+            : [null, null, 'translateX(10rem) translateY(30rem)', 'translateX(-5rem) translateY(-30rem)']
         } :
-        (!isTabletOrMobile && yTransform[enemyTarget] == 5) || (isTabletOrMobile && xTransform[enemyTarget] == -21) ? {
+        (!isTabletOrMobile && yTransform[enemyTarget] == 5) || (isTabletOrMobile && xTransform[enemyTarget] == -20) ? {
             transform: !isTabletOrMobile ? [null, null, 'translateX(-50rem) translateY(0rem)', 'translateX(30rem) translateY(-10rem)']
-            : [null, null, 'translateX(-21rem) translateY(40rem)', 'translateX(-6rem) translateY(-50rem)']
+            : [null, null, 'translateX(-20rem) translateY(30rem)', 'translateX(-5rem) translateY(-30rem)']
         } : {
             transform: enemyInitial
         }
@@ -66,7 +66,9 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
                 {isBurned ? <p style = {{color: 'orange'}}>Burned</p> : null}
                 <div className='card levels-card' id={name}
                 style = {{border: isParalyzed ? '2px solid #cdc17c' : isBuffed ? `1rem groove ${characterInfo.bgColors[name]}` : '1px solid black',
-                          boxShadow: '0 0 15px 1px black'}}>
+                          boxShadow: '0 0 15px 1px black',
+                          width: !isTabletOrMobile ? '12rem' : '10rem',
+                          height: !isTabletOrMobile ? '20rem' : '16rem'}}>
                     <div className='image-wrapper'>
                         <img src={`/images/${name}.png`} className='card-photo' />
                     </div>
