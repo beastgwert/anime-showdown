@@ -5,15 +5,19 @@ import characterInfo from '../character-info';
 import Ripple from './Ripple';
 import VictoryOverlay from './Overlays/VictoryOverlay';
 import LossOverlay from './Overlays/LossOverlay';
+import { useMediaQuery } from 'react-responsive';
 
 export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage, cardLevels, enemyName, 
     enemyLevel, stagesComplete, setStagesComplete, levelPoints, setLevelPoints}){
 
+    
     console.log('level rerendered!');
+    
+    const [viewportSwitch, setViewportSwitch] = useState(false);
     const [isLevelBeat, setIsLevelBeat] = useState(false);
     const [isLevelLost, setIsLevelLost] = useState(false);
-    const [xTransform, setXTransform] = useState([30, 5, 5]);
-    const [yTransform, setYTransform] = useState([-10, -25, 5]);
+    const [xTransform, setXTransform] = useState([]);
+    const [yTransform, setYTransform] = useState([]);
     const [mainIndex, setMainIndex] = useState(0);
     const [firstUpdate, setFirstUpdate] = useState(true);
     const [isRotating, setIsRotating] = useState(false);
@@ -37,8 +41,23 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     const [kakashiBuffCnt, setKakashiBuffCnt] = useState(0);
     const numClicks = useRef(0);
     const mainCard = loadoutCards[mainIndex];
-    console.log('Was special: ', wasSpecialAbility);
-    
+
+    const handleMediaQueryChange = (matches) => {
+        if(viewportSwitch) setViewportSwitch(false);
+        else setViewportSwitch(true);
+    }
+    const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 }, undefined, handleMediaQueryChange);
+
+    useEffect(() => { // change dimensions
+        if(isTabletOrMobile){
+            setXTransform([-6, 9, -21]);
+            setYTransform([15, 35, 35]);
+        }
+        else{
+            setXTransform([30, 5, 5]);
+            setYTransform([-10, -25, 5]);
+        }
+    }, [viewportSwitch])
     useEffect(() => { // change background
         setBgColor(`linear-gradient(to right, ${characterInfo.bgColors[mainCard]}, ${characterInfo.bgColors[enemyName]})`)
         setBgImage(''); 
@@ -263,14 +282,16 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
         })
         return numAlive;
     }
+
     return (
         <>
             {isLevelBeat ? <VictoryOverlay levelNumber={levelNumber} stagesComplete={stagesComplete} setStagesComplete={setStagesComplete}
             levelPoints={levelPoints} setLevelPoints={setLevelPoints}/> : null}
             {isLevelLost && !isLevelBeat ? <LossOverlay /> : null}
             <div className="level">
-                <div className='level-display'>
-                    <div className='ally-side'>
+                <div className='level-display' style={isTabletOrMobile ? {flexDirection: 'column'} : null}>
+                    <div className='ally-side' style={isTabletOrMobile ? {borderBottom: '0.25rem dashed black', justifyContent: 'center', alignItems: 'end'} : 
+                    {borderRight: '0.25rem dashed black', alignItems: 'center'}}>
                         <div className='ally-reference'>
                             <LevelCard 
                             name={loadoutCards[0]} 
@@ -288,6 +309,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             || (gojoBuffCnt > 0 && loadoutCards[0] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[0] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[0] == 'Ichigo')
                             || (kakashiBuffCnt > 0 && loadoutCards[0] == 'Kakashi')
                             }
+                            isTabletOrMobile={isTabletOrMobile}
                             />
                             <LevelCard 
                             name={loadoutCards[1]} 
@@ -305,6 +327,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             || (gojoBuffCnt > 0 && loadoutCards[1] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[1] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[1] == 'Ichigo')
                             || (kakashiBuffCnt > 0 && loadoutCards[1] == 'Kakashi')
                             }
+                            isTabletOrMobile={isTabletOrMobile}
                             />
                             <LevelCard 
                             name={loadoutCards[2]} 
@@ -322,25 +345,29 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             || (gojoBuffCnt > 0 && loadoutCards[2] == 'Gojo') || (natsuBuffCnt > 0 && loadoutCards[2] == 'Natsu') || (ichigoBuffCnt > 0 && loadoutCards[2] == 'Ichigo')
                             || (kakashiBuffCnt > 0 && loadoutCards[2] == 'Kakashi')
                             }
+                            isTabletOrMobile={isTabletOrMobile}
                             />
                         </div>
                     </div>
-                    <div className='enemy-side'>
-                        <LevelCard 
-                        name={enemyName} 
-                        enemyLevel={enemyLevel}
-                        xTransform={xTransform} 
-                        yTransform={yTransform} 
-                        firstUpdate={firstUpdate}
-                        loadoutIndex={-1}
-                        isAlly={false}
-                        cardLevels={cardLevels}
-                        enemyTarget={enemyTarget}
-                        health={isLevelBeat ? 0 : enemyHealth}
-                        isParalyzed={isEnemyParalyzed}
-                        isBurned={isEnemyBurned}
-                        isConfused={isEnemyConfused}
-                        />
+                    <div className='enemy-side' style={isTabletOrMobile ? {justifyContent: 'center'} : {alignItems: 'center'}}>
+                        <div className='enemy-reference'>
+                            <LevelCard 
+                            name={enemyName} 
+                            enemyLevel={enemyLevel}
+                            xTransform={xTransform} 
+                            yTransform={yTransform} 
+                            firstUpdate={firstUpdate}
+                            loadoutIndex={-1}
+                            isAlly={false}
+                            cardLevels={cardLevels}
+                            enemyTarget={enemyTarget}
+                            health={isLevelBeat ? 0 : enemyHealth}
+                            isParalyzed={isEnemyParalyzed}
+                            isBurned={isEnemyBurned}
+                            isConfused={isEnemyConfused}
+                            isTabletOrMobile={isTabletOrMobile}
+                            />
+                        </div>
                     </div>
                     <button className='game-clicker' style={{ background: characterInfo.bgColors[mainCard]}} 
                     onClick={!isClicking || isEnemyTurn ? null : () => {
@@ -367,10 +394,11 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                         
                     </button>
                 </div>
-                <div className='level-control-container'>
-                    <div className='level-control' style={{ background: `linear-gradient(${characterInfo.bgColors[mainCard]}, #090f15`}}>
+                <div className='level-control-container' style={isTabletOrMobile ? {flex: '0.5'} : {flex: '0.8'}}>
+                    <div className='level-control' style={{ background: `linear-gradient(${characterInfo.bgColors[mainCard]}, #090f15`,
+                    width: isTabletOrMobile ? '50%' : '30%'}}>
                         <div 
-                        className='ability'
+                        className='ability damage-ability'
                         onClick={isClicking || isEnemyTurn ? null : () => {
                             setIsClicking(true);
                         }}>
@@ -385,7 +413,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
                             </div>
                         </div>
                         <div 
-                        className='ability'
+                        className='ability special-ability'
                         onClick={isClicking || isEnemyTurn || mainCard == 'Anya' || mainCard == 'Makima' || 
                             (mainCard == 'Genos' && loadoutHealth[mainIndex] == characterInfo.health['Genos'][cardLevels['Genos']-1]) ? null : () => {
                             setIsSpecialAbility(true);

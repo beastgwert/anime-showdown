@@ -30,9 +30,7 @@ export default function Ripple({duration, color}){
       rippleContainer.width > rippleContainer.height
         ? rippleContainer.width
         : rippleContainer.height;
-    const x = e.pageX - rippleContainer.x - size / 2;
-    const y = e.pageY - rippleContainer.y - size / 2;
-    const newRipple = {x, y, size};
+    const newRipple = {size};
 
     setRippleArray([...rippleArray, newRipple]);
   };
@@ -45,8 +43,8 @@ export default function Ripple({duration, color}){
             <span
               key={"span" + index}
               style={{
-                top: ripple.y,
-                left: ripple.x,
+                top: 0,
+                left: 0,
                 width: ripple.size,
                 height: ripple.size,
               }}

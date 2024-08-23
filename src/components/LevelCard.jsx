@@ -1,11 +1,17 @@
 import { useState, useEffect, useRef} from 'react';
 import '../styles/Card.css';
-import {motion} from 'framer-motion';
+import {motion, transform} from 'framer-motion';
 import characterInfo from '../character-info';
+import { useMediaQuery } from 'react-responsive';
 
 export default function LevelCard({name, enemyLevel, xTransform, yTransform, firstUpdate, loadoutIndex, isAlly, wasMainIndex, isMainIndex, 
-    cardLevels, enemyTarget = -1, health, wasSpecialAbility = false, isBuffed = false, isParalyzed = false, isBurned = false, isConfused = false}){
+    cardLevels, enemyTarget = -1, health, wasSpecialAbility = false, isBuffed = false, isParalyzed = false, isBurned = false, isConfused = false, isTabletOrMobile}){
     const totalHealth = characterInfo.health[name][(isAlly ? cardLevels[name] : enemyLevel) -1];
+
+    const allyInitial = `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`
+    const enemyInitial = !isTabletOrMobile ? 'translateX(30rem) translateY(-10rem)' : 'translateX(-6rem) translateY(-50rem)';
+    const allyAttackAnimate = !isTabletOrMobile ? [null, 'translateX(80rem) translateY(-5rem)', `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`] :
+    [null, 'translateX(-6rem) translateY(-50rem)', `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`];
     console.log("LevelCard rerender: ", health, totalHealth, isBuffed);
 
     return (
@@ -13,11 +19,11 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
         className={`motion-wrapper`}
         style = {{opacity: health == 0 ? '0.25' : '1'}}
         initial={isAlly ? {
-            transform: `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`,
-        } : {transform: 'translateX(30rem) translateY(-10rem)'}}
+            transform: allyInitial,
+        } : {transform: enemyInitial}}
         animate={isAlly ? 
             wasMainIndex && !firstUpdate && health != 0 && !wasSpecialAbility ? {
-                transform: [null, 'translateX(80rem) translateY(-5rem)', `translateX(${xTransform[loadoutIndex]}rem) translateY(${yTransform[loadoutIndex]}rem)`]
+                transform: allyAttackAnimate
             }
             :
             {
@@ -25,15 +31,20 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
         } : 
         isParalyzed ? null
         :
-        yTransform[enemyTarget] == -10 ? {
-            transform: [null, null, 'translateX(-30rem) translateY(-10rem)', 'translateX(30rem) translateY(-10rem)']
+        (!isTabletOrMobile && yTransform[enemyTarget] == -10) || (isTabletOrMobile && xTransform[enemyTarget] == -6) ? {
+            transform: !isTabletOrMobile ? [null, null, 'translateX(-30rem) translateY(-10rem)', 'translateX(30rem) translateY(-10rem)']
+            : [null, null, 'translateX(-6rem) translateY(20rem)', 'translateX(-6rem) translateY(-50rem)']
         } :
-        yTransform[enemyTarget] == -25 ? {
-            transform: [null, null, 'translateX(-50rem) translateY(-20rem)', 'translateX(30rem) translateY(-10rem)']
+        (!isTabletOrMobile && yTransform[enemyTarget] == -25) || (isTabletOrMobile && xTransform[enemyTarget] == 9) ? {
+            transform: !isTabletOrMobile ? [null, null, 'translateX(-50rem) translateY(-20rem)', 'translateX(30rem) translateY(-10rem)']
+            : [null, null, 'translateX(9rem) translateY(40rem)', 'translateX(-6rem) translateY(-50rem)']
         } :
-        yTransform[enemyTarget] == 5 ? {
-            transform: [null, null, 'translateX(-50rem) translateY(0rem)', 'translateX(30rem) translateY(-10rem)']
-        } : null
+        (!isTabletOrMobile && yTransform[enemyTarget] == 5) || (isTabletOrMobile && xTransform[enemyTarget] == -21) ? {
+            transform: !isTabletOrMobile ? [null, null, 'translateX(-50rem) translateY(0rem)', 'translateX(30rem) translateY(-10rem)']
+            : [null, null, 'translateX(-21rem) translateY(40rem)', 'translateX(-6rem) translateY(-50rem)']
+        } : {
+            transform: enemyInitial
+        }
         }
         transition={wasMainIndex && !firstUpdate && health != 0 && !wasSpecialAbility ?  {
             duration: 1.5,
