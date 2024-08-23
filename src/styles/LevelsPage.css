@@ -5,6 +5,7 @@
     justify-content: space-between;
     align-items: center;
     overflow-x: auto;
+    gap: 3rem;
 }
 .levels-card.levels-card {
     box-shadow: 0 0 20px black;
@@ -43,7 +44,6 @@
 }
 .level-caption {
     font-weight: 100;
-    font-size: 1rem;
     font-style: italic;
 }
 .level-button:hover {
