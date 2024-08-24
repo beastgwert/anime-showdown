@@ -5,7 +5,7 @@ export default function Card({name, isHighlighted, handleSwapping, cardLevels, l
         <div className='card-wrapper'>
             <div className={`card cards-card ${isHighlighted ? 'selected-to-swap' : ''}`} id={name} onClick={handleSwapping}>
                 <div className='image-wrapper'>
-                    <img src={`/images/${name}.png`} className='card-photo' />
+                    <img src={`/images/${name}.webp`} className='card-photo' />
                 </div>
                 <p>{name} (LV {cardLevels[name]})</p>
             </div>

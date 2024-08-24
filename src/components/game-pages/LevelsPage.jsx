@@ -13,7 +13,7 @@ export default function LevelsPage(){
     useEffect(() => {
         console.log("got to levels useeffect");
         if(level == -1){
-            setBgImage(`url('/images/clouds-background.png')`);
+            setBgImage(`url('/images/clouds-background.webp')`);
             setBgColor('#cdc17c');
         }
     })

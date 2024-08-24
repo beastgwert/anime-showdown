@@ -8,7 +8,7 @@ export default function LevelsDisplay({stagesComplete}){
             <div className="levels-display">
                 <div className='levels-column'>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(1) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(1) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={() => navigate('/play/levels/1')} >
                             <div className='level-description'>
                                 <p className='level-title'>{characterInfo.bossNames[0]}</p>
@@ -19,7 +19,7 @@ export default function LevelsDisplay({stagesComplete}){
                 </div>
                 <div className='levels-column'>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(2) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(2) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(1) ? () => navigate('/play/levels/2') : null} 
                         style={stagesComplete.includes(1) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
@@ -29,7 +29,7 @@ export default function LevelsDisplay({stagesComplete}){
                         </button>
                     </div>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(3) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(3) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(1) ? () => navigate('/play/levels/3') : null} 
                         style={stagesComplete.includes(1) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
@@ -41,7 +41,7 @@ export default function LevelsDisplay({stagesComplete}){
                 </div>
                 <div className='levels-column'>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(4) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(4) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(2) || stagesComplete.includes(3) ? () => navigate('/play/levels/4') : null} 
                         style={stagesComplete.includes(2) || stagesComplete.includes(3) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
@@ -53,7 +53,7 @@ export default function LevelsDisplay({stagesComplete}){
                 </div>
                 <div className='levels-column'>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(5) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(5) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(4)  ? () => navigate('/play/levels/5') : null} 
                         style={stagesComplete.includes(4) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
@@ -65,7 +65,7 @@ export default function LevelsDisplay({stagesComplete}){
                 </div>
                 <div className='levels-column'>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(6) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(6) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(5) ? () => navigate('/play/levels/6') : null} 
                         style={stagesComplete.includes(5) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
@@ -75,7 +75,7 @@ export default function LevelsDisplay({stagesComplete}){
                         </button>
                     </div>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(7) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(7) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(5) ? () => navigate('/play/levels/7') : null} 
                         style={stagesComplete.includes(5) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>
@@ -87,7 +87,7 @@ export default function LevelsDisplay({stagesComplete}){
                 </div>
                 <div className='levels-column'>
                     <div className='level-button-wrapper'>
-                        {stagesComplete.includes(8) ? <img src="/images/crown.png" alt="" /> : null}
+                        {stagesComplete.includes(8) ? <img src="/images/crown.webp" alt="" /> : null}
                         <button className='level-button' onClick={stagesComplete.includes(6) || stagesComplete.includes(7) ? () => navigate('/play/levels/8') : null} 
                         style={stagesComplete.includes(6) || stagesComplete.includes(7) ? null : {opacity: '0.3'}}>
                             <div className='level-description'>

@@ -9,7 +9,7 @@ export default function CreditsCard({name}){
             }}> 
                 <a className="cover-link" target="_blank" rel="noopener noreferrer" href={characterInfo.artLinks[name]}></a>
                 <div className='image-wrapper'>
-                    <img src={`/images/${name}.png`} className='card-photo' />
+                    <img src={`/images/${name}.webp`} className='card-photo' />
                 </div>
                 <p>{name}</p>
             </div>

@@ -70,7 +70,7 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
                           width: !isTabletOrMobile ? '12rem' : '10rem',
                           height: !isTabletOrMobile ? '20rem' : '16rem'}}>
                     <div className='image-wrapper'>
-                        <img src={`/images/${name}.png`} className='card-photo' />
+                        <img src={`/images/${name}.webp`} className='card-photo' />
                     </div>
                     <p>{name} (LV {isAlly ? cardLevels[name] : enemyLevel})</p>
                 </div>
