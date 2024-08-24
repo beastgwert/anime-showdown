@@ -51,7 +51,7 @@ export default function Level({levelNumber, loadoutCards, setBgColor, setBgImage
     useEffect(() => { // change dimensions
         if(isTabletOrMobile){
             setXTransform([-5, 10, -20]);
-            setYTransform([10, 25, 25]);
+            setYTransform([10, 20, 20]);
         }
         else{
             setXTransform([30, 5, 5]);

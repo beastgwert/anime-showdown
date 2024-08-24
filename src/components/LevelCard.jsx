@@ -37,11 +37,11 @@ export default function LevelCard({name, enemyLevel, xTransform, yTransform, fir
         } :
         (!isTabletOrMobile && yTransform[enemyTarget] == -25) || (isTabletOrMobile && xTransform[enemyTarget] == 10) ? {
             transform: !isTabletOrMobile ? [null, null, 'translateX(-50rem) translateY(-20rem)', 'translateX(30rem) translateY(-10rem)']
-            : [null, null, 'translateX(10rem) translateY(30rem)', 'translateX(-5rem) translateY(-30rem)']
+            : [null, null, 'translateX(10rem) translateY(25rem)', 'translateX(-5rem) translateY(-30rem)']
         } :
         (!isTabletOrMobile && yTransform[enemyTarget] == 5) || (isTabletOrMobile && xTransform[enemyTarget] == -20) ? {
             transform: !isTabletOrMobile ? [null, null, 'translateX(-50rem) translateY(0rem)', 'translateX(30rem) translateY(-10rem)']
-            : [null, null, 'translateX(-20rem) translateY(30rem)', 'translateX(-5rem) translateY(-30rem)']
+            : [null, null, 'translateX(-20rem) translateY(25rem)', 'translateX(-5rem) translateY(-30rem)']
         } : {
             transform: enemyInitial
         }
