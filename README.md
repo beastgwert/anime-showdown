@@ -6,12 +6,24 @@ Anime Showdown is a single player level-based anime card game featuring nearly a
 
 ![Demo Picture](src/assets/preview.png)
 
-## [Built with]
+## Built with
 
-- Vite + React
-- ExpressJS
-- PostgreSQL
-- Tailwind
-- Framer Motion
+- Vite: Optimized developer experience
+- React: User interface
+- ExpressJS: REST API
+- PostgreSQL: CRUD operations
+- Tailwind: Extra styling
+- Framer Motion: Smooth motion animations
+
+## Pending Features
+
+- **Multiplayer**
+- **Additional levels and cards**
+- **Easy, medium, difficult mode levels**
+- **Text indicating damage numbers**
+- **Sound effects**
 
 
+## Contributing
+
+Contributions are welcome! If you encounter any problems or have any suggestions, please open an issue or submit a pull request.
