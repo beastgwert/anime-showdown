@@ -1,19 +1,29 @@
-import Cookies from 'universal-cookie';
 import { googleLogout } from "@react-oauth/google"
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import '../styles/Header.css'
+import '../styles/Header.css';
+import { createApiUrl } from '../config/api';
 
 export default function Header({setOverlay, curPage, changePage}){
     console.log("curpage: ", curPage);
     const navigate = useNavigate();
-    const cookies = new Cookies(null, {path: '/'});
 
-    const logOut = () => {
-        googleLogout();
-        cookies.remove('jwt_authorization', { path: '/'});
-        console.log("logged out");
-        navigate('/');
+    const logOut = async () => {
+        try {
+            // Call logout endpoint to clear httpOnly cookie
+            await fetch(createApiUrl('/api/auth/logout'), {
+                method: 'POST',
+                credentials: 'include'
+            });
+            
+            googleLogout();
+            console.log("logged out");
+            navigate('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Still navigate to home even if logout request fails
+            navigate('/');
+        }
     };
 
     return (
