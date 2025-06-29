@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-import '../styles/HomePage.css';
+import styles from '../styles/HomePage.module.css';
 import { createApiUrl } from '../config/api';
 import { useState, useEffect } from 'react';
+import MultiplayerOverlay from './multiplayer/MultiplayerOverlay';
 
 export default function HomePage(){
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [showMultiplayerOverlay, setShowMultiplayerOverlay] = useState(false);
 
     // Check authentication status on component mount
     useEffect(() => {
@@ -72,8 +74,8 @@ export default function HomePage(){
 
     if (isLoading) {
         return (
-            <div className="homepage-main page">
-                <div className='homepage-content'>
+            <div className={`${styles['homepage-main']} page`}>
+                <div className={styles['homepage-content']}>
                     <p>Loading...</p>
                 </div>
             </div>
@@ -81,22 +83,24 @@ export default function HomePage(){
     }
 
     return (
-        <div className="homepage-main page">
-            <div className='homepage-content'>
-                <p>Anime Showdown</p>
-                <div className='homepage-caption'><p className='typed-out'>A progression-based card game!</p></div>
-                {
-                isAuthenticated ? 
-                <button className='play-button' onClick={() => navigate("/play/cards")}>
-                    PLAY
-                </button>
-                :
-                <button className='play-button' onClick={() => login()}>
-                    Single Player
-                </button>
-                }
+        <div className={`${styles['homepage-main']} page`}>
+            <div className={styles['homepage-content']}>
+                <p className={styles.transparent}>Anime Showdown</p>
+                <div className={styles['homepage-caption']}><p className={styles['typed-out']}>A turn-based character card game!</p></div>
+                <div className={styles['button-container']}>
+                    <button className={styles['play-button']} onClick={() => isAuthenticated ? navigate("/play/cards") : login()}>
+                        Story Mode
+                    </button>
+                    <button className={styles['multiplayer-button']} onClick={() => setShowMultiplayerOverlay(true)}>
+                        Multiplayer
+                    </button>
+                </div>
+                
+                {showMultiplayerOverlay && (
+                    <MultiplayerOverlay onClose={() => setShowMultiplayerOverlay(false)} />
+                )}
             </div>
-            <div className='page-footer'>
+            <div className={styles['page-footer']}>
                 <p><a target="_blank" rel="noopener noreferrer" href="https://tinyurl.com/mru4bk9d">Lofi Anime Wallpaper</a> 2023</p>
                 <p>Pikswell, CC BY-NC-ND 3.0 </p>
             </div>
