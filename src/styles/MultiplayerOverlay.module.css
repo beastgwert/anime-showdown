@@ -310,3 +310,26 @@ input::placeholder {
   height: 100%;
   filter: invert(1);
 }
+
+.players-count {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  color: white;
+}
+
+.reminder-text {
+  font-size: 1.2rem;
+  text-align: center;
+  color: white;
+  margin: 0;
+}
+
+.share-reminder {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}

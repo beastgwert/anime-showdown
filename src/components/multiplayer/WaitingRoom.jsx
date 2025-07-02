@@ -6,7 +6,8 @@ export default function WaitingRoom({
   isHost, 
   hasOpponentJoined, 
   onStartGame, 
-  onBack 
+  onBack,
+  roomData
 }) {
   return (
     <div className={styles['waiting-room']}>
@@ -35,6 +36,11 @@ export default function WaitingRoom({
             {hasOpponentJoined ? 'Connected' : 'Waiting...'}
           </span>
         </div>
+        {roomData?.players && (
+          <div className={styles['players-list']}>
+            <p className={styles['players-count']}>Players in room: {roomData.players.length}/2</p>
+          </div>
+        )}
       </div>
       {isHost && (
         <button 
@@ -49,6 +55,12 @@ export default function WaitingRoom({
         <p className={styles['waiting-message']}>
           {hasOpponentJoined ? 'Ready to start! Waiting for host...' : 'Waiting for host to start the game...'}
         </p>
+      )}
+      
+      {roomData?.players?.length === 1 && (
+        <div className={styles['share-reminder']}>
+          <p className={styles['reminder-text']}>Share the room code with your friend to get started!</p>
+        </div>
       )}
 
     </div>

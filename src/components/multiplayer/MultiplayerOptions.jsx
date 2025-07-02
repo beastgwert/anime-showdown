@@ -4,13 +4,23 @@ import styles from '../../styles/MultiplayerOverlay.module.css';
 export default function MultiplayerOptions({ 
   joinRoomCode, 
   setJoinRoomCode, 
-  handleCreateRoom, 
-  handleJoinRoom 
+  onCreateRoom, 
+  onJoinRoom,
+  isConnected
 }) {
   return (
     <div className={styles['room-options']}>
       <h2 className={styles.h2}>Multiplayer Options</h2>
-      <button className={styles['action-button']} onClick={handleCreateRoom}>
+      {!isConnected && (
+        <div className={styles['connection-status']}>
+          <p className={styles['status-text']}>Connecting to server...</p>
+        </div>
+      )}
+      <button 
+        className={styles['action-button']} 
+        onClick={onCreateRoom}
+        disabled={!isConnected}
+      >
         CREATE ROOM
       </button>
       <div className={styles['join-section']}>
@@ -26,8 +36,8 @@ export default function MultiplayerOptions({
           />
           <button 
             className={styles['action-button']}
-            disabled={joinRoomCode.length !== 6}
-            onClick={handleJoinRoom}
+            disabled={joinRoomCode.length !== 6 || !isConnected}
+            onClick={onJoinRoom}
           >
             JOIN
           </button>
