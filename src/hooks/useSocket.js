@@ -18,6 +18,7 @@ const useSocket = (initialHandlers = {}) => {
   // Room state
   const [roomData, setRoomData] = useState(null);
   const [isHost, setIsHost] = useState(false);
+  const [playerIndex, setPlayerIndex] = useState(null);
   const [error, setError] = useState(null);
   
   // Game state
@@ -32,16 +33,19 @@ const useSocket = (initialHandlers = {}) => {
         if (status === CONNECTION_STATUS.DISCONNECTED) {
           setRoomData(null);
           setGameState(null);
+          setPlayerIndex(null);
         }
       },
       onRoomCreated: (data) => {
-        setRoomData({ roomId: data.roomId, players: [{ socketId: socketClient.getSocketId(), isHost: true }] });
+        setRoomData({ roomId: data.roomId, players: [{ socketId: socketClient.getSocketId(), isHost: true, playerIndex: data.playerIndex }] });
         setIsHost(true);
+        setPlayerIndex(data.playerIndex);
         setError(null);
       },
       onRoomJoined: (data) => {
         setRoomData({ roomId: data.roomId, players: [] });
         setIsHost(data.isHost);
+        setPlayerIndex(data.playerIndex);
         setError(null);
       },
       onRoomUpdated: (data) => {
@@ -130,6 +134,7 @@ const useSocket = (initialHandlers = {}) => {
     socketClient.leaveRoom();
     setRoomData(null);
     setGameState(null);
+    setPlayerIndex(null);
   }, []);
   
   const startGame = useCallback(() => {
@@ -149,6 +154,7 @@ const useSocket = (initialHandlers = {}) => {
     connectionStatus,
     roomData,
     isHost,
+    playerIndex,
     gameState,
     error,
     socketId: socketClient.getSocketId(),

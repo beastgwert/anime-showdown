@@ -1,0 +1,270 @@
+/* Main layout container */
+.game-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+  z-index: 1001; /* Higher than the overlay z-index */
+}
+
+/* Main game container */
+.game-container {
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  padding: 16px;
+  box-sizing: border-box;
+  position: relative;
+  margin: 0 auto; /* Center horizontally */
+}
+
+/* Loading and game result states */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loading h2 {
+  font-size: 2rem;
+  color: #64ffda;
+  animation: pulse 2s infinite;
+}
+
+.game-result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.game-result h2 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #64ffda;
+}
+
+.result-text {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.closing-text {
+  font-size: 1rem;
+  color: #888;
+  animation: pulse 2s infinite;
+}
+
+/* Game header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 8px;
+}
+
+.room-code {
+  background: rgba(100, 255, 218, 0.1);
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid #64ffda;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.turn-indicator {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #64ffda;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Opponent area */
+.opponent-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.opponent-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ff6b6b;
+  margin-bottom: 12px;
+}
+
+/* Playing area */
+.playing-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.battle-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vs-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #64ffda;
+  text-shadow: 0 0 10px #64ffda;
+  animation: pulse 2s infinite;
+}
+
+/* Player area */
+.player-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.player-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #64ffda;
+  margin-bottom: 12px;
+}
+
+/* Cards container */
+.cards-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card styles */
+.card {
+  width: 30%;
+  aspect-ratio: 2/3; /* This maintains proportional height (width:height = 2:3) */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.opponent-card {
+  border: 2px solid #ff6b6b;
+}
+
+.player-card {
+  border: 2px solid #64ffda;
+}
+
+.player-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+}
+
+.placeholder-card {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.placeholder-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.card-image {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.card-back {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff6b6b;
+  border-radius: 4px;
+}
+
+.card-name {
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 4px;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 1.1;
+  max-height: 20px;
+  overflow: hidden;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #64ffda, 0 0 10px #64ffda, 0 0 15px #64ffda;
+  }
+  to {
+    text-shadow: 0 0 10px #64ffda, 0 0 20px #64ffda, 0 0 30px #64ffda;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    font-size: 10px;
+  }
+  
+  .game-container * {
+    font-size: inherit;
+  }
+}
+
+@media (max-width: 480px) {
+    .battle-zone {
+        font-size: 18px;
+    }
+}

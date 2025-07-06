@@ -2,17 +2,19 @@ import { useState, useEffect } from 'react';
 import styles from '../../styles/MultiplayerOverlay.module.css';
 import WaitingRoom from './WaitingRoom';
 import MultiplayerOptions from './MultiplayerOptions';
+import MultiplayerGame from './MultiplayerGame';
 import useSocket from '../../hooks/useSocket';
 
 export default function MultiplayerOverlay({ onClose }) {
-  const [step, setStep] = useState('options'); // options, waiting
+  const [step, setStep] = useState('options'); // options, waiting, playing
   const [joinRoomCode, setJoinRoomCode] = useState('');
   
-  // Initialize socket connection
   const {
     roomData,
     isHost,
+    playerIndex,
     error,
+    gameState,
     createRoom,
     joinRoom,
     startGame,
@@ -21,7 +23,6 @@ export default function MultiplayerOverlay({ onClose }) {
     isInRoom
   } = useSocket();
 
-  // Handle room creation
   const handleCreateRoom = () => {
     if (!isConnected) {
       alert('Not connected to server. Please try again.');
@@ -30,7 +31,6 @@ export default function MultiplayerOverlay({ onClose }) {
     createRoom();
   };
 
-  // Handle room joining
   const handleJoinRoom = () => {
     if (joinRoomCode.length !== 6) {
       alert('Please enter a valid 6-character room code');
@@ -45,12 +45,10 @@ export default function MultiplayerOverlay({ onClose }) {
     joinRoom(joinRoomCode.toUpperCase());
   };
 
-  // Handle game start
   const handleStartGame = () => {
     startGame();
   };
 
-  // Handle back button - leave room if in one
   const handleBack = () => {
     if (isInRoom) {
       leaveRoom();
@@ -58,26 +56,40 @@ export default function MultiplayerOverlay({ onClose }) {
     setStep('options');
   };
 
-  // Update step when room state changes
   useEffect(() => {
     if (roomData && step === 'options') {
       setStep('waiting');
     }
   }, [roomData, step]);
 
-  // Show error messages
+  useEffect(() => {
+    if (gameState && gameState.gamePhase === 'active' && step === 'waiting') {
+      setStep('playing');
+    }
+  }, [gameState, step]);
+
   useEffect(() => {
     if (error) {
       alert(error);
     }
   }, [error]);
 
-  // Determine if opponent has joined (room has 2 players)
   const hasOpponentJoined = roomData?.players?.length === 2;
-  
-  // Get room code from room data
   const roomCode = roomData?.roomId || '';
 
+  if (step === 'playing') {
+    return (
+      <MultiplayerGame
+        gameState={gameState}
+        playerIndex={playerIndex}
+        roomCode={roomCode}
+        onGameEnd={() => {
+          setStep('options');
+        }}
+      />
+    );
+  }
+  
   return (
     <div className={styles['multiplayer-overlay']}>
       <div className={styles['overlay-backdrop']}></div>
