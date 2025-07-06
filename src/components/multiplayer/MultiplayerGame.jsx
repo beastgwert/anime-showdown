@@ -5,20 +5,12 @@ import characterInfo from '../../character-info.jsx';
 
 // Helper function to create a darker shade of a color
 const getDarkerShade = (hexColor, factor = 0.3) => {
-  // Default color if hexColor is invalid
   if (!hexColor || hexColor === 'black') return 'rgba(10, 10, 10, 0.9)';
+
+  let r = Math.max(0, Math.floor(parseInt(hexColor.substring(1, 3), 16) * (1 - factor)));
+  let g = Math.max(0, Math.floor(parseInt(hexColor.substring(3, 5), 16) * (1 - factor)));
+  let b = Math.max(0, Math.floor(parseInt(hexColor.substring(5, 7), 16) * (1 - factor)));
   
-  // Convert hex to RGB
-  let r = parseInt(hexColor.substring(1, 3), 16);
-  let g = parseInt(hexColor.substring(3, 5), 16);
-  let b = parseInt(hexColor.substring(5, 7), 16);
-  
-  // Make it darker
-  r = Math.max(0, Math.floor(r * (1 - factor)));
-  g = Math.max(0, Math.floor(g * (1 - factor)));
-  b = Math.max(0, Math.floor(b * (1 - factor)));
-  
-  // Return rgba with some transparency
   return `rgba(${r}, ${g}, ${b}, 0.9)`;
 };
 
@@ -28,6 +20,7 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
   const [opponentCards, setOpponentCards] = useState(gameState.players[playerIndex === 0 ? 1 : 0].deck || []);
   const [backgroundGradient, setBackgroundGradient] = useState('linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)');
+  const [showSpecialAbility, setShowSpecialAbility] = useState(false);
 
   useEffect(() => {
     if (gameState && gameState.players) {
@@ -40,7 +33,6 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
     const myColor = characterInfo.bgColors[playerCards[currentCardIndex]] || '#091023';
     const opponentColor = characterInfo.bgColors[opponentCards[1]] || '#1a1a2e';
         
-    // Create gradient: opponent color at top, player color at bottom
     const gradient = `linear-gradient(to bottom, ${opponentColor}, ${myColor})`;
     setBackgroundGradient(gradient);
   }, [currentCardIndex, playerCards, opponentCards])
@@ -58,7 +50,13 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
     onGameEnd();
   };
 
+  const handleSpecialAbility = (cardName) => {
+    console.log(`${cardName}'s special ability was used`);
+  }
 
+  const handleBasicAttack = (cardName) => {
+    console.log(`${cardName}'s basic attack was used`);
+  }
 
   if (!gameState) {
     return (
@@ -130,18 +128,45 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
         <div className={styles['playing-area']}>
           <div className={styles['dotted-line']}></div>
           <div 
-            className={styles['ability-display']}
+            className={`${styles['ability-display']} ${
+                currentCardIndex !== -1 && (!showSpecialAbility || characterInfo.isSpecialAbilityActive[playerCards[currentCardIndex]]) ? 
+              styles['ability-display-special'] : ''
+            }`}
             style={{ 
-              background: currentCardIndex === -1 ? 'black' : getDarkerShade(characterInfo.bgColors[playerCards[currentCardIndex]]) 
+              background: currentCardIndex === -1 ? 'black' : getDarkerShade(characterInfo.bgColors[playerCards[currentCardIndex]]),
+              cursor: currentCardIndex !== -1 && (!showSpecialAbility || characterInfo.isSpecialAbilityActive[playerCards[currentCardIndex]]) ? 'pointer' : 'default'
+            }}
+            onClick={() => {
+              if (currentCardIndex !== -1 && showSpecialAbility && characterInfo.isSpecialAbilityActive[playerCards[currentCardIndex]]) {
+                handleSpecialAbility(playerCards[currentCardIndex]);
+              } else if(currentCardIndex !== -1 && !showSpecialAbility) {
+                handleBasicAttack(playerCards[currentCardIndex]);
+              }
             }}
           >
             {currentCardIndex === -1 ? (
               <div className={styles['vs-text']}>VS</div>
             ) : (
               <>
-                <div className={styles['ability-title']}>{characterInfo.abilities[playerCards[currentCardIndex]][1]}</div>
-                <div className={styles['ability-text']}>
-                  {characterInfo.abilityDescription[playerCards[currentCardIndex]] || 'No ability description available'}
+                {currentCardIndex !== -1 && (
+                  <div className={styles['ability-flip-icon']} onClick={(e) => {
+                    e.stopPropagation(); 
+                    setShowSpecialAbility(!showSpecialAbility);
+                  }}>
+                    <img src="/icons/ability-flip.svg" alt="Toggle ability" />
+                  </div>
+                )}
+                <div className={styles['ability-title']}>
+                  {showSpecialAbility 
+                    ? characterInfo.abilities[playerCards[currentCardIndex]][1] // Special ability
+                    : characterInfo.abilities[playerCards[currentCardIndex]][0] // Basic attack
+                  }
+                </div>
+                <div className={showSpecialAbility ? styles['ability-description'] : styles['ability-damage']}>
+                  {showSpecialAbility 
+                    ? characterInfo.multiplayerAbilityDescription[playerCards[currentCardIndex]] || 'No ability description available'
+                    : `${characterInfo.abilityDamages[playerCards[currentCardIndex]][0]} - ${characterInfo.abilityDamages[playerCards[currentCardIndex]][1]}`
+                  }
                 </div>
               </>
             )}
@@ -157,7 +182,14 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
                 card={card} 
                 isOpponent={false} 
                 isSelected={currentCardIndex === index}
-                onClick={() => setCurrentCardIndex(currentCardIndex === index ? -1 : index)} 
+                onClick={() => {
+                  if (currentCardIndex === index) {
+                    setCurrentCardIndex(-1);
+                  } else {
+                    setCurrentCardIndex(index);
+                    setShowSpecialAbility(false);
+                  }
+                }} 
               />
             )}
           </div>
