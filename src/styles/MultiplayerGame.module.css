@@ -55,7 +55,7 @@
 .game-result h2 {
   font-size: 3rem;
   margin-bottom: 20px;
-  color: #64ffda;
+  color: whitesmoke;
 }
 
 .result-text {
@@ -68,6 +68,29 @@
   font-size: 1rem;
   color: #888;
   animation: pulse 2s infinite;
+}
+
+.continue-button {
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: black;
+  color: whitesmoke;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+.continue-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+.continue-button:active {
+  transform: translateY(1px);
 }
 
 /* Game header */

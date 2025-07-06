@@ -69,23 +69,32 @@ const useSocket = (initialHandlers = {}) => {
         });
       },
       onPlayerLeft: (data) => {
-        setRoomData((prevData) => {
-          if (!prevData) return null;
-          
-          const updatedRoomData = {
-            ...prevData,
-            ...data.room
-          };
-          
-          // Check if current player is now the host
-          const currentSocketId = socketClient.getSocketId();
-          const currentPlayer = updatedRoomData.players?.find(p => p.socketId === currentSocketId);
-          if (currentPlayer) {
-            setIsHost(currentPlayer.isHost);
-          }
-          
-          return updatedRoomData;
-        });
+        // Check if we're in an active game when player left
+        if (gameState && gameState.gamePhase === 'active') {
+          setGameState((prevState) => ({
+            ...prevState,
+            gamePhase: 'interrupted',
+            opponentDisconnected: true
+          }));
+        } else {
+          setRoomData((prevData) => {
+            if (!prevData) return null;
+            
+            const updatedRoomData = {
+              ...prevData,
+              ...data.room
+            };
+            
+            // Check if current player is now the host
+            const currentSocketId = socketClient.getSocketId();
+            const currentPlayer = updatedRoomData.players?.find(p => p.socketId === currentSocketId);
+            if (currentPlayer) {
+              setIsHost(currentPlayer.isHost);
+            }
+            
+            return updatedRoomData;
+          });
+        }
       },
       onGameStarted: (data) => {
         setGameState(data.gameState);
@@ -117,7 +126,7 @@ const useSocket = (initialHandlers = {}) => {
       // Don't disconnect, just remove handlers
       socketClient.updateHandlers({});
     };
-  }, [initialHandlers]);
+  }, [initialHandlers, gameState]);
   
   // Socket actions
   const createRoom = useCallback(() => {

@@ -22,7 +22,7 @@ const getDarkerShade = (hexColor, factor = 0.3) => {
   return `rgba(${r}, ${g}, ${b}, 0.9)`;
 };
 
-export default function MultiplayerGame({ gameState, playerIndex, onGameEnd }) {
+export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, leaveRoom }) {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
@@ -52,6 +52,11 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd }) {
       }, 3000);
     }
   }, [gameState?.gamePhase, onGameEnd]);
+  
+  const handleOpponentDisconnect = () => {
+    leaveRoom();
+    onGameEnd();
+  };
 
 
 
@@ -79,6 +84,25 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd }) {
                'It\'s a Tie!'}
             </p>
             <p className={styles['closing-text']}>Returning to lobby...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (gameState.gamePhase === 'interrupted' && gameState.opponentDisconnected) {
+    return (
+      <div className={styles['game-layout']}>
+        <div className={styles['game-container']} style={{ background: backgroundGradient, transition: 'background 1s ease' }}>
+          <div className={styles['game-result']}>
+            <h2>Opponent Disconnected</h2>
+            <p className={styles['result-text']}>Your opponent has left the game.</p>
+            <button 
+              className={styles['continue-button']} 
+              onClick={handleOpponentDisconnect}
+            >
+              Continue
+            </button>
           </div>
         </div>
       </div>

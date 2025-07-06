@@ -83,6 +83,7 @@ export default function MultiplayerOverlay({ onClose }) {
         gameState={gameState}
         playerIndex={playerIndex}
         roomCode={roomCode}
+        leaveRoom={leaveRoom}
         onGameEnd={() => {
           setStep('options');
         }}
