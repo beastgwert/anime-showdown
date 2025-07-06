@@ -13,7 +13,7 @@ export default function MultiplayerOptions({
       <h2 className={styles.h2}>Multiplayer Options</h2>
       {!isConnected && (
         <div className={styles['connection-status']}>
-          <p className={styles['status-text']}>Connecting to server...</p>
+          <p className={styles['status-text']}>Connecting...</p>
         </div>
       )}
       <button 

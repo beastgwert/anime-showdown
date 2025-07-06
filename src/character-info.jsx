@@ -64,11 +64,11 @@
    multiplayerAbilityDescription: {
       'Sung-jin-woo': 'Shadows heal allies for a fraction of their maximum health',
       'Mikasa': 'Mikasa\'s next attack has a chance to paralyze the enemy',
-      'Luffy': 'Increases Luffy\'s damage for the next 2 rounds (does not stack)',
+      'Luffy': 'Increases Luffy\'s damage for 2 rounds (does not stack)',
       'Gojo': 'Gojo distorts space, granting dodge change to allies (passive)',
       'Natsu': 'Natsu transforms, increasing damage with a small chance to paralyze enemies for 3 rounds',
       'Ichigo': 'Ichigo summons his Zangetsu and his next attack deals 2/3 of the enemy\'s remaining health',
-      'Kakashi': 'Kakashi gets serious, granting him dodge and crit chance for the next three rounds',
+      'Kakashi': 'Kakashi gets serious, granting him dodge and crit chance for 3 rounds',
       'Anya': 'Anya\'s presence lowers surrounding aggression, decreasing damage of nearby enemies (passive)',
       'Mudkip': 'Mudkip flings mud at the enemy, lowering opponent\'s accuracy for 2 rounds',
       'Genos': 'Genos self-destructs, dealing 0.75x damage of HP lost',
