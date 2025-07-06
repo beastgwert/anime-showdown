@@ -73,25 +73,15 @@
 /* Game header */
 .game-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
   padding: 0 8px;
 }
 
-.room-code {
-  background: rgba(100, 255, 218, 0.1);
-  padding: 6px 12px;
-  border-radius: 16px;
-  border: 1px solid #64ffda;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
 .turn-indicator {
   font-size: 1rem;
   font-weight: bold;
-  color: #64ffda;
   animation: glow 2s ease-in-out infinite alternate;
 }
 
@@ -107,7 +97,7 @@
 .opponent-label {
   font-size: 1rem;
   font-weight: bold;
-  color: #ff6b6b;
+  color: black;
   margin-bottom: 12px;
 }
 
@@ -129,7 +119,6 @@
 .vs-text {
   font-size: 2rem;
   font-weight: bold;
-  color: #64ffda;
   text-shadow: 0 0 10px #64ffda;
   animation: pulse 2s infinite;
 }
@@ -146,7 +135,7 @@
 .player-label {
   font-size: 1rem;
   font-weight: bold;
-  color: #64ffda;
+  color: black;
   margin-bottom: 12px;
 }
 
@@ -160,7 +149,8 @@
 
 /* Card styles */
 .card {
-  width: 30%;
+  flex: 1;
+  width: 100%;
   aspect-ratio: 2/3; /* This maintains proportional height (width:height = 2:3) */
   border-radius: 8px;
   display: flex;
@@ -174,16 +164,27 @@
 }
 
 .opponent-card {
-  border: 2px solid #ff6b6b;
+  border: 2px solid black;
 }
 
 .player-card {
-  border: 2px solid #64ffda;
+  border: 2px solid black;
 }
 
-.player-card:hover {
+/* .player-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+} */
+
+.selected-card {
+  transform: scale(1.1) translateY(-8px);
+  /* border: 10px groove white !important; */
+  z-index: 10;
+  position: relative;
+}
+
+.selected-card:hover {
+  transform: scale(1.1) translateY(-8px);
 }
 
 .placeholder-card {
@@ -238,6 +239,53 @@
   overflow: hidden;
 }
 
+/* Card with HP wrapper */
+.card-with-hp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  height: 100%;
+}
+
+/* HP Bar Styles */
+.hp-bar-container {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.hp-bar {
+  width: 100%;
+  height: 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid black;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hp-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.3s ease;
+}
+
+.hp-text {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
 @keyframes pulse {
   0% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -246,10 +294,10 @@
 
 @keyframes glow {
   from {
-    text-shadow: 0 0 5px #64ffda, 0 0 10px #64ffda, 0 0 15px #64ffda;
+    text-shadow: 0 0 5px white, 0 0 10px white, 0 0 15px white;
   }
   to {
-    text-shadow: 0 0 10px #64ffda, 0 0 20px #64ffda, 0 0 30px #64ffda;
+    text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
   }
 }
 
