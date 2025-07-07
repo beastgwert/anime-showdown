@@ -5,38 +5,33 @@ import LoadoutCard from './LoadoutCard';
 import characterInfo from '../../character-info.jsx';
 
 export default function LoadoutSelection({ onConfirmLoadout, roomCode }) {
-  // Use playableCharacters from character-info.jsx
   const playableCharacters = characterInfo.playableCharacters;
   
-  // Default loadout: first 3 elements of playableCharacters
   const [selectedLoadout, setSelectedLoadout] = useState(playableCharacters.slice(0, 3));
+  const [availableCharacters, setAvailableCharacters] = useState(playableCharacters.slice(3));
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState(null); // Track which loadout slot is selected for replacement
+  const [selectedSlot, setSelectedSlot] = useState(null); 
   
-  // Get all playable characters from character-info
-  const allCharacters = playableCharacters;
-  
-  // Available characters for selection (excluding current loadout)
-  const availableCharacters = allCharacters.filter(char => !selectedLoadout.includes(char));
-  
-  const handleCardClick = (character) => {
-    if (isConfirmed) return; // Can't change after confirmation
+  const handleCardClick = (character, index) => {
+    if (isConfirmed || selectedSlot === null) return; 
     
-    // If clicking a character in loadout, do nothing (they can't remove from loadout directly)
-    if (selectedLoadout.includes(character)) return;
-    
-    // If a slot is selected, replace that slot; otherwise replace the first slot
     const slotToReplace = selectedSlot !== null ? selectedSlot : 0;
+    const replacedCharacter = selectedLoadout[slotToReplace];
+    
     const newLoadout = [...selectedLoadout];
     newLoadout[slotToReplace] = character;
+    
+    const newAvailableCharacters = [...availableCharacters];
+    newAvailableCharacters[index] = replacedCharacter;
+    
     setSelectedLoadout(newLoadout);
-    setSelectedSlot(null); // Clear selection after replacement
+    setAvailableCharacters(newAvailableCharacters);
+    setSelectedSlot(null); 
   };
   
   const handleLoadoutSlotClick = (index) => {
-    if (isConfirmed) return; // Can't change after confirmation
+    if (isConfirmed) return; 
     
-    // Toggle slot selection
     setSelectedSlot(selectedSlot === index ? null : index);
   };
   
@@ -95,11 +90,11 @@ export default function LoadoutSelection({ onConfirmLoadout, roomCode }) {
             onClick={slideLeft}
           />
           <div id='character-slider' className={styles['character-slider']}>
-            {availableCharacters.map((character) => (
+            {availableCharacters.map((character, index) => (
               <div key={character} className={styles['character-option']}>
                 <LoadoutCard 
                   card={character}
-                  onClick={() => handleCardClick(character)}
+                  onClick={() => handleCardClick(character, index)}
                 />
               </div>
             ))}
