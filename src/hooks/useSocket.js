@@ -99,6 +99,14 @@ const useSocket = (initialHandlers = {}) => {
       onGameStarted: (data) => {
         setGameState(data.gameState);
       },
+      onPlayingStarted: (data) => {
+        // Update game state and set game phase to active
+        setGameState((prevState) => ({
+          ...prevState,
+          ...data,
+          gamePhase: 'active'
+        }));
+      },
       onGameStateUpdate: (data) => {
         setGameState(data);
       },
@@ -154,6 +162,10 @@ const useSocket = (initialHandlers = {}) => {
     socketClient.startGame();
   }, [isHost]);
   
+  const confirmLoadout = useCallback((loadout) => {
+    socketClient.confirmLoadout(loadout);
+  }, []);
+  
   const sendGameAction = useCallback((action) => {
     socketClient.sendGameAction(action);
   }, []);
@@ -175,6 +187,7 @@ const useSocket = (initialHandlers = {}) => {
     joinRoom,
     leaveRoom,
     startGame,
+    confirmLoadout,
     sendGameAction,
     
     // Helpers

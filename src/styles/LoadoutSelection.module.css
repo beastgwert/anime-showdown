@@ -1,0 +1,290 @@
+/* Main loadout container - similar to game-container but without gradient */
+.loadout-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+  z-index: 1001; /* Higher than the overlay z-index */
+}
+
+.loadout-container {
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  padding: 16px;
+  box-sizing: border-box;
+  position: relative;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+/* Header section */
+.loadout-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #64ffda;
+}
+
+.loadout-header h2 {
+  font-size: 1.8rem;
+  color: #64ffda;
+  margin: 0 0 8px 0;
+  font-weight: bold;
+}
+
+.room-code {
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin: 0;
+}
+
+/* Current loadout section */
+.current-loadout {
+  margin-bottom: 30px;
+}
+
+.current-loadout h3 {
+  font-size: 1.3rem;
+  color: #64ffda;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.instruction-text {
+  font-size: 0.9rem;
+  color: #b0b0b0;
+  text-align: center;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.loadout-cards {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.loadout-slot {
+  width: 22%;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.selected-slot {
+  background: rgba(100, 255, 218, 0.2);
+  border: 2px solid #64ffda;
+  box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
+}
+
+/* Character selection section */
+.character-selection {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.character-selection h3 {
+  font-size: 1.3rem;
+  color: #64ffda;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.character-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 160px; /* Reduced height to match smaller cards */
+}
+
+.slider-arrow {
+  font-size: 1.5rem;
+  color: #64ffda;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.slider-arrow:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+}
+
+.character-slider {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  flex: 1;
+  height: 100%;
+  
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.character-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.character-option {
+  flex: 0 0 auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 80px; /* Reduced width for character options */
+}
+
+.character-option:hover {
+  transform: scale(1.05);
+}
+
+/* Confirm section */
+.confirm-section {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.confirm-button {
+  background: linear-gradient(135deg, #64ffda, #4fc3f7);
+  color: #1a1a2e;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.confirm-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+}
+
+.confirm-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.confirmed {
+  background: linear-gradient(135deg, #4caf50, #66bb6a) !important;
+}
+
+.waiting-message {
+  margin-top: 15px;
+  color: #b0b0b0;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* LoadoutCard styles */
+.loadout-card {
+  width: 100%;
+  aspect-ratio: 2/3; /* This maintains proportional height (width:height = 2:3) */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid black;
+}
+
+.loadout-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+}
+
+.card-image {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.card-back {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff6b6b;
+  border-radius: 4px;
+}
+
+.card-name {
+  font-size: 0.6rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 2px;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 1.1;
+  max-height: 16px;
+  overflow: hidden;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .loadout-container {
+    padding: 12px;
+  }
+  
+  .loadout-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .loadout-cards {
+    gap: 10px;
+  }
+  
+  .character-slider-container {
+    height: 140px;
+  }
+  
+  .character-slider {
+    gap: 10px;
+  }
+  
+  .character-option {
+    width: 70px;
+  }
+  
+  .confirm-button {
+    padding: 10px 25px;
+    font-size: 1rem;
+    min-width: 180px;
+  }
+}

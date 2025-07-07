@@ -9,6 +9,7 @@ export const CLIENT_EVENTS = {
   JOIN_ROOM: 'join-room',
   LEAVE_ROOM: 'leave-room',
   START_GAME: 'start-game',
+  CONFIRM_LOADOUT: 'confirm-loadout',
   GAME_ACTION: 'game-action',
   CARD_PLAYED: 'card-played',
   TURN_END: 'turn-end'
@@ -22,6 +23,8 @@ export const SERVER_EVENTS = {
   PLAYER_JOINED: 'player-joined',
   PLAYER_LEFT: 'player-left',
   GAME_STARTED: 'game-started',
+  LOADOUT_CONFIRMED: 'loadout-confirmed',
+  PLAYING_STARTED: 'playing-started',
   GAME_STATE_UPDATE: 'game-state-update',
   PLAYER_TURN: 'player-turn',
   GAME_OVER: 'game-over',

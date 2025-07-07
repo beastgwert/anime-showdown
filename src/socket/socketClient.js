@@ -97,11 +97,18 @@ export const connect = (customHandlers = {}) => {
     handlers.onGameStarted(data);
   });
 
+  socket.on(SERVER_EVENTS.PLAYING_STARTED, (data) => {
+    console.log('Playing started:', data);
+    // Use existing onGameStateUpdate handler to update game state
+    handlers.onGameStateUpdate(data);
+  });
+
   socket.on(SERVER_EVENTS.GAME_STATE_UPDATE, (data) => {
     // Don't log full game state as it could be large
     console.log('Game state updated');
     handlers.onGameStateUpdate(data);
   });
+  
 
   socket.on(SERVER_EVENTS.GAME_OVER, (data) => {
     console.log('Game over:', data);
@@ -176,6 +183,19 @@ export const startGame = () => {
 };
 
 /**
+ * Confirms player loadout selection
+ * @param {Array} loadout - Array of selected character names
+ */
+export const confirmLoadout = (loadout) => {
+  if (!socket || !socket.connected) {
+    handlers.onError({ type: 'connection', message: 'Not connected to server' });
+    return;
+  }
+  
+  socket.emit(CLIENT_EVENTS.CONFIRM_LOADOUT, { loadout });
+};
+
+/**
  * Sends a game action to the server
  * @param {Object} action - Action data
  */
@@ -222,6 +242,7 @@ export default {
   joinRoom,
   leaveRoom,
   startGame,
+  confirmLoadout,
   sendGameAction,
   updateHandlers,
   getConnectionStatus,

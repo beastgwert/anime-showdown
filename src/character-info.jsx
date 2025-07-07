@@ -1,4 +1,5 @@
  const characterInfo = {
+   playableCharacters: ['Sung-jin-woo', 'Mikasa', 'Luffy', 'Gojo', 'Natsu', 'Ichigo', 'Kakashi', 'Anya', 'Mudkip', 'Genos', 'Makima'],
    abilities: {
       'Sung-jin-woo': ['Mutilation', 'Shadow Regeneration'],
       'Mikasa': ['Thunder Spears', 'Charge'],

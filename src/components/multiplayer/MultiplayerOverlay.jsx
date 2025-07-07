@@ -3,11 +3,13 @@ import styles from '../../styles/MultiplayerOverlay.module.css';
 import WaitingRoom from './WaitingRoom';
 import MultiplayerOptions from './MultiplayerOptions';
 import MultiplayerGame from './MultiplayerGame';
+import LoadoutSelection from './LoadoutSelection';
 import useSocket from '../../hooks/useSocket';
 
 export default function MultiplayerOverlay({ onClose }) {
-  const [step, setStep] = useState('options'); // options, waiting, playing
+  const [step, setStep] = useState('options'); // options, waiting, loadout, playing
   const [joinRoomCode, setJoinRoomCode] = useState('');
+  const [playerLoadout, setPlayerLoadout] = useState(null);
   
   const {
     roomData,
@@ -18,6 +20,7 @@ export default function MultiplayerOverlay({ onClose }) {
     createRoom,
     joinRoom,
     startGame,
+    confirmLoadout,
     leaveRoom,
     isConnected,
     isInRoom
@@ -46,10 +49,24 @@ export default function MultiplayerOverlay({ onClose }) {
   };
 
   const handleStartGame = () => {
+    // Instead of starting game directly, move to loadout selection
+    setStep('loadout');
     startGame();
+    console.log("Game started!!!!!")
+  };
+  
+  const handleConfirmLoadout = (loadout) => {
+    setPlayerLoadout(loadout);
+    console.log('Player confirmed loadout:', loadout);
+    // Send loadout confirmation to server
+    confirmLoadout(loadout);
   };
 
   const handleBack = () => {
+    // No back button allowed after game starts (loadout step)
+    if (step === 'loadout') {
+      return;
+    }
     if (isInRoom) {
       leaveRoom();
     }
@@ -63,8 +80,10 @@ export default function MultiplayerOverlay({ onClose }) {
   }, [roomData, step]);
 
   useEffect(() => {
-    if (gameState && gameState.gamePhase === 'active' && step === 'waiting') {
+    if (gameState && gameState.gamePhase === 'active' && step === 'loadout') {
       setStep('playing');
+    } else if (gameState && gameState.gamePhase === 'loadout' && step === 'waiting') {
+      setStep('loadout');
     }
   }, [gameState, step]);
 
@@ -76,6 +95,15 @@ export default function MultiplayerOverlay({ onClose }) {
 
   const hasOpponentJoined = roomData?.players?.length === 2;
   const roomCode = roomData?.roomId || '';
+
+  if (step === 'loadout') {
+    return (
+      <LoadoutSelection
+        roomCode={roomCode}
+        onConfirmLoadout={handleConfirmLoadout}
+      />
+    );
+  }
 
   if (step === 'playing') {
     return (

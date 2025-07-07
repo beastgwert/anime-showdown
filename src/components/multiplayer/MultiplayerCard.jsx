@@ -1,7 +1,7 @@
 import styles from '../../styles/MultiplayerGame.module.css';
 import characterInfo from '../../character-info.jsx';
 
-export default function MultiplayerCard({ card, isOpponent = false, isSelected = false, onClick }) {
+export default function MultiplayerCard({ card, isOpponent = false, isSelected = false, onClick, showHP = true }) {
   if (!card) return null;
   
   const cardName = card.name || card;
@@ -23,7 +23,7 @@ export default function MultiplayerCard({ card, isOpponent = false, isSelected =
   }
   
   return (
-    <div className={styles['card-with-hp']}>
+    <div className={showHP ? styles['card-with-hp'] : ''}>
       <div 
         className={`${styles['card']} ${isOpponent ? styles['opponent-card'] : styles['player-card']} ${isSelected ? styles['selected-card'] : ''}`}
         onClick={!isOpponent && onClick ? () => onClick() : undefined}
@@ -43,17 +43,19 @@ export default function MultiplayerCard({ card, isOpponent = false, isSelected =
           {cardName}
         </div>
       </div>
-      <div className={styles['hp-bar-container']}>
-        <div className={styles['hp-bar']}>
-          <div 
-            className={styles['hp-bar-fill']} 
-            style={{ width: `${hpPercentage}%`, backgroundColor: hpColor }}
-          ></div>
-          <div className={styles['hp-text']}>
-            {currentHP}/{maxHP}
+      {showHP && (
+        <div className={styles['hp-bar-container']}>
+          <div className={styles['hp-bar']}>
+            <div 
+              className={styles['hp-bar-fill']} 
+              style={{ width: `${hpPercentage}%`, backgroundColor: hpColor }}
+            ></div>
+            <div className={styles['hp-text']}>
+              {currentHP}/{maxHP}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
