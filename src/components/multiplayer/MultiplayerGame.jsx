@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import DisconnectionNotice from './DisconnectionNotice';
 import styles from '../../styles/MultiplayerGame.module.css';
 import MultiplayerCard from './MultiplayerCard';
 import characterInfo from '../../character-info.jsx';
@@ -14,7 +15,7 @@ const getDarkerShade = (hexColor, factor = 0.3) => {
   return `rgba(${r}, ${g}, ${b}, 0.9)`;
 };
 
-export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, leaveRoom }) {
+export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, handleOpponentDisconnect}) {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
@@ -45,11 +46,6 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
     }
   }, [gameState?.gamePhase, onGameEnd]);
   
-  const handleOpponentDisconnect = () => {
-    leaveRoom();
-    onGameEnd();
-  };
-
   const handleSpecialAbility = (cardName) => {
     console.log(`${cardName}'s special ability was used`);
   }
@@ -90,20 +86,11 @@ export default function MultiplayerGame({ gameState, playerIndex, onGameEnd, lea
   
   if (gameState.gamePhase === 'interrupted' && gameState.opponentDisconnected) {
     return (
-      <div className={styles['game-layout']}>
-        <div className={styles['game-container']} style={{ background: backgroundGradient, transition: 'background 1s ease' }}>
-          <div className={styles['game-result']}>
-            <h2>Opponent Disconnected</h2>
-            <p className={styles['result-text']}>Your opponent has left the game.</p>
-            <button 
-              className={styles['continue-button']} 
-              onClick={handleOpponentDisconnect}
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      </div>
+      <DisconnectionNotice
+        onContinue={handleOpponentDisconnect}
+        containerClassName={styles['game-layout']}
+        backgroundStyle={{ background: backgroundGradient, transition: 'background 1s ease' }}
+      />
     );
   }
 

@@ -69,14 +69,13 @@ const useSocket = (initialHandlers = {}) => {
         });
       },
       onPlayerLeft: (data) => {
-        // Check if we're in an active game when player left
-        if (gameState && gameState.gamePhase === 'active') {
+        if (gameState && (gameState.gamePhase === 'loadout' || gameState.gamePhase === 'active')) { // update game state to display disconnect message if game has already started
           setGameState((prevState) => ({
             ...prevState,
             gamePhase: 'interrupted',
             opponentDisconnected: true
           }));
-        } else {
+        } else { // handle player leaving waiting room 
           setRoomData((prevData) => {
             if (!prevData) return null;
             

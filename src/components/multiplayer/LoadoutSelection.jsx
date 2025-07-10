@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import DisconnectionNotice from './DisconnectionNotice';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from '../../styles/LoadoutSelection.module.css';
 import LoadoutCard from './LoadoutCard';
 import characterInfo from '../../character-info.jsx';
+import { leaveRoom } from '../../socket/socketClient.js';
 
-export default function LoadoutSelection({ onConfirmLoadout, roomCode }) {
+export default function LoadoutSelection({ onConfirmLoadout, roomCode, gameState, handleOpponentDisconnect }) {
   const playableCharacters = characterInfo.playableCharacters;
   
   const [selectedLoadout, setSelectedLoadout] = useState(playableCharacters.slice(0, 3));
@@ -49,7 +51,17 @@ export default function LoadoutSelection({ onConfirmLoadout, roomCode }) {
     const slider = document.getElementById('character-slider');
     slider.scrollLeft = slider.scrollLeft + 200;
   };
-  
+
+  // Check for opponent disconnection
+  if (gameState && gameState.gamePhase === 'interrupted' && gameState.opponentDisconnected) {
+    return (
+      <DisconnectionNotice
+        onContinue={handleOpponentDisconnect}
+        containerClassName={styles['loadout-layout']}
+      />
+    );
+  }
+
   return (
     <div className={styles['loadout-layout']}>
       <div className={styles['loadout-container']}>

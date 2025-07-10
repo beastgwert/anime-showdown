@@ -73,6 +73,11 @@ export default function MultiplayerOverlay({ onClose }) {
     setStep('options');
   };
 
+  const handleOpponentDisconnect = () => {
+    leaveRoom();
+    setStep('options');
+  };
+
   useEffect(() => {
     if (roomData && step === 'options') {
       setStep('waiting');
@@ -96,30 +101,32 @@ export default function MultiplayerOverlay({ onClose }) {
   const hasOpponentJoined = roomData?.players?.length === 2;
   const roomCode = roomData?.roomId || '';
 
-  if (step === 'loadout') {
+  if (step === 'loadout') { // loadout screen
     return (
       <LoadoutSelection
         roomCode={roomCode}
         onConfirmLoadout={handleConfirmLoadout}
+        gameState={gameState}
+        handleOpponentDisconnect={handleOpponentDisconnect}
       />
     );
   }
 
-  if (step === 'playing') {
+  if (step === 'playing') { // gameplay
     return (
       <MultiplayerGame
         gameState={gameState}
         playerIndex={playerIndex}
         roomCode={roomCode}
-        leaveRoom={leaveRoom}
         onGameEnd={() => {
           setStep('options');
         }}
+        handleOpponentDisconnect={handleOpponentDisconnect}
       />
     );
   }
   
-  return (
+  return ( // game creation
     <div className={styles['multiplayer-overlay']}>
       <div className={styles['overlay-backdrop']}></div>
       <div className={styles['overlay-content']} onClick={(e) => e.stopPropagation()}>
