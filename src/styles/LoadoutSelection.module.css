@@ -20,13 +20,14 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: black;
   color: white;
   padding: 16px;
   box-sizing: border-box;
   position: relative;
   margin: 0 auto;
   overflow-y: auto;
+  border-top: 2px solid whitesmoke
 }
 
 /* Header section */
@@ -34,12 +35,12 @@
   text-align: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #64ffda;
+  border-bottom: 2px solid whitesmoke;
 }
 
 .loadout-header h2 {
   font-size: 1.8rem;
-  color: #64ffda;
+  color: whitesmoke;
   margin: 0 0 8px 0;
   font-weight: bold;
 }
@@ -57,7 +58,7 @@
 
 .current-loadout h3 {
   font-size: 1.3rem;
-  color: #64ffda;
+  color: whitesmoke;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -86,7 +87,7 @@
 
 .selected-slot {
   background: rgba(100, 255, 218, 0.2);
-  border: 2px solid #64ffda;
+  border: 2px solid whitesmoke;
   box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
 }
 
@@ -98,7 +99,7 @@
 
 .character-selection h3 {
   font-size: 1.3rem;
-  color: #64ffda;
+  color: whitesmoke;
   margin-bottom: 15px;
   text-align: center;
 }
@@ -112,14 +113,14 @@
 
 .slider-arrow {
   font-size: 1.5rem;
-  color: #64ffda;
+  color: whitesmoke;
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
 .slider-arrow:hover {
-  color: #ffffff;
+  color: whitesmoke;
   transform: scale(1.2);
 }
 
@@ -160,7 +161,7 @@
 }
 
 .confirm-button {
-  background: linear-gradient(135deg, #64ffda, #4fc3f7);
+  background: whitesmoke;
   color: #1a1a2e;
   border: none;
   padding: 12px 30px;
@@ -174,7 +175,7 @@
 
 .confirm-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
 }
 
 .confirm-button:disabled {
@@ -209,9 +210,9 @@
   border: 2px solid black;
 }
 
-.loadout-card:hover {
+.character-option .loadout-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
 .card-image {
@@ -257,34 +258,35 @@
 }
 
 /* Responsive design */
-@media (max-width: 480px) {
-  .loadout-container {
-    padding: 12px;
+@media (max-width: 768px) {
+  
+  .loadout-header {
+    border-bottom: 1px solid whitesmoke;
   }
   
   .loadout-header h2 {
-    font-size: 1.5rem;
+    font-size: 5rem;
   }
   
-  .loadout-cards {
-    gap: 10px;
+  .room-code {
+    font-size: 2.5rem;
+  }
+
+  .current-loadout h3 {
+    font-size: 5rem;
+  }
+
+  .current-loadout p {
+    font-size: 2rem;
   }
   
-  .character-slider-container {
-    height: 140px;
+  .card-name {
+    font-size: 2rem;
   }
-  
-  .character-slider {
-    gap: 10px;
-  }
-  
-  .character-option {
-    width: 70px;
-  }
-  
+
   .confirm-button {
     padding: 10px 25px;
-    font-size: 1rem;
+    font-size: 3rem;
     min-width: 180px;
   }
 }
