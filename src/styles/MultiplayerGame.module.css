@@ -296,6 +296,17 @@
   transform: scale(1.1) translateY(-8px);
 }
 
+/* Targetable opponent cards - show white border when player can select them */
+.targetable-card {
+  border: 2px solid white !important;
+  cursor: pointer;
+}
+
+.targetable-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
+}
+
 .placeholder-card {
   opacity: 0.6;
   cursor: default;
@@ -348,13 +359,21 @@
   overflow: hidden;
 }
 
+/* Motion div wrapper for animated cards */
+.motion-card-wrapper {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Card with HP wrapper */
 .card-with-hp {
   display: grid;
   grid-template-rows: 1fr auto;
   gap: 4px;
   align-items: center;
-  width: 30%;
+  width: 100%; /* Changed from 30% to 100% since motion wrapper handles width */
   height: 100%;
 }
 
