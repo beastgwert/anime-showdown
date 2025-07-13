@@ -116,6 +116,10 @@ const useSocket = (initialHandlers = {}) => {
           result: data.result
         }));
       },
+      onEndGame: (data) => {
+        setGameState(data.gameState);
+        console.log('Game ended:', data);
+      },
       onError: (data) => {
         setError(data.error || 'Unknown error');
       },
@@ -173,6 +177,10 @@ const useSocket = (initialHandlers = {}) => {
     socketClient.sendGameActionFinished();
   }, []);
   
+  const sendGameEnd = useCallback(() => {
+    socketClient.sendGameEnd();
+  }, []);
+  
   return {
     // State
     connectionStatus,
@@ -193,6 +201,7 @@ const useSocket = (initialHandlers = {}) => {
     confirmLoadout,
     sendGameAction,
     sendGameActionFinished,
+    sendGameEnd,
     
     // Helpers
     isConnected: connectionStatus === CONNECTION_STATUS.CONNECTED,

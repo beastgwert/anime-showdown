@@ -12,7 +12,8 @@ export const CLIENT_EVENTS = {
   CONFIRM_LOADOUT: 'confirm-loadout',
   GAME_ACTION: 'game-action',
   GAME_ACTION_FINISHED: 'game-action-finished',
-  TURN_END: 'turn-end'
+  TURN_END: 'turn-end',
+  GAME_END: 'game-end'
 };
 
 // Server → Client events
@@ -30,7 +31,8 @@ export const SERVER_EVENTS = {
   SWITCH_TURN: 'switch-turn',
   GAME_OVER: 'game-over',
   ROOM_ERROR: 'room-error',
-  GAME_ERROR: 'game-error'
+  GAME_ERROR: 'game-error',
+  END_GAME: 'end-game'
 };
 
 // Connection status

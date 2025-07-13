@@ -16,7 +16,7 @@ const getDarkerShade = (hexColor, factor = 0.3) => {
   return `rgba(${r}, ${g}, ${b}, 0.9)`;
 };
 
-export default function MultiplayerGame({ gameState, playerIndex, sendGameAction, sendGameActionFinished, onGameEnd, handleOpponentDisconnect}) {
+export default function MultiplayerGame({ gameState, playerIndex, sendGameAction, sendGameActionFinished, sendGameEnd, onGameEnd, handleOpponentDisconnect}) {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
@@ -66,6 +66,27 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       }, 3000);
     }
   }, [gameState?.gamePhase, onGameEnd]);
+
+  // Automatically deselect card if it dies
+  useEffect(() => {
+    if (currentCardIndex !== -1 && playerHP[currentCardIndex] <= 0) {
+      setCurrentCardIndex(-1);
+      setShowSpecialAbility(false);
+    }
+  }, [currentCardIndex, playerHP]);
+
+  // Check if all player cards are dead and end the game
+  useEffect(() => {
+    // Only check if game is active and we have HP data
+    if (gameState?.gamePhase === 'active' && playerHP.length > 0) {
+      const allPlayerCardsDead = playerHP.every(hp => hp <= 0);
+      
+      if (allPlayerCardsDead) {
+        console.log('All player cards are dead, ending game');
+        sendGameEnd();
+      }
+    }
+  }, [playerHP, gameState?.gamePhase, sendGameEnd]);
 
   const handleSpecialAbility = (cardName) => {
     console.log(`${cardName}'s special ability was used`);
@@ -123,7 +144,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
           setAttackAnimation(null);
           setDamageDealt(null);
           setIsAttacking(false);
-          
+          setCurrentCardIndex(-1);
           // Notify server that animation is finished
           sendGameActionFinished();
         }, 1500);
@@ -149,6 +170,11 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     console.log("isAttacking: ", isAttacking);
     console.log("gameState?.isAttacking: ", gameState?.isAttacking);
     if (currentPlayerIndex !== playerIndex || isAttacking || gameState?.isAttacking) {
+      return;
+    }
+    
+    // Check if the target opponent card is dead
+    if (opponentHP[opponentIndex] <= 0) {
       return;
     }
     
@@ -181,17 +207,32 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   }
 
   if (gameState.gamePhase === 'ended') {
+    const isWinner = gameState.winner && gameState.winner === gameState.players[playerIndex]?.socketId;
+    const isLoser = gameState.loser && gameState.loser === gameState.players[playerIndex]?.socketId;
+    
     return (
-      <div className={styles['game-layout']}>
-        <div className={styles['game-container']} style={{ background: backgroundGradient, transition: 'background 1s ease' }}>
-          <div className={styles['game-result']}>
-            <h2>Game Over!</h2>
-            <p className={styles['result-text']}>
-              {gameState.result?.winner === 'player' ? 'You Won!' : 
-               gameState.result?.winner === 'opponent' ? 'You Lost!' : 
-               'It\'s a Tie!'}
-            </p>
-            <p className={styles['closing-text']}>Returning to lobby...</p>
+      <div className={styles['game-layout']} style={{ background: backgroundGradient, transition: 'background 1s ease' }}>
+        <div className={styles['game-end-overlay']}>
+          <div className={styles['game-end-content']}>
+            {isWinner && (
+              <>
+                <h1 className={styles['victory-text']}>🎉 VICTORY! 🎉</h1>
+                <p className={styles['game-end-message']}>You defeated your opponent!</p>
+              </>
+            )}
+            {isLoser && (
+              <>
+                <h1 className={styles['defeat-text']}>💀 DEFEAT 💀</h1>
+                <p className={styles['game-end-message']}>All your cards have been defeated.</p>
+              </>
+            )}
+            {!isWinner && !isLoser && (
+              <>
+                <h1 className={styles['game-end-text']}>Game Ended</h1>
+                <p className={styles['game-end-message']}>The game has concluded.</p>
+              </>
+            )}
+            <p className={styles['return-message']}>Returning to lobby...</p>
           </div>
         </div>
       </div>
@@ -274,7 +315,8 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     isOpponent={true}
                     currentHP={opponentHP[index]}
                     maxHP={characterInfo.maxHP[card]}
-                    isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex}
+                    isDead={opponentHP[index] <= 0}
+                    isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex && opponentHP[index] > 0}
                     onClick={() => handleOpponentCardClick(index)}
                   />
                   {/* Damage display - show damage when this opponent card is the target */}
@@ -317,8 +359,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
             }`}
             style={{ 
               background: currentCardIndex === -1 ? 'black' : getDarkerShade(characterInfo.bgColors[playerCards[currentCardIndex]]),
-              cursor: currentCardIndex !== -1 && (!showSpecialAbility || characterInfo.isSpecialAbilityActive[playerCards[currentCardIndex]]) && !isAttacking && currentPlayerIndex === playerIndex ? 'pointer' : 'default',
-              opacity: isAttacking ? 0.6 : 1
+              cursor: currentCardIndex !== -1 && (!showSpecialAbility || characterInfo.isSpecialAbilityActive[playerCards[currentCardIndex]]) && !isAttacking && currentPlayerIndex === playerIndex ? 'pointer' : 'default'
             }}
             onClick={() => {
               if (isAttacking || currentPlayerIndex !== playerIndex) return;
@@ -415,8 +456,9 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     isSelected={currentCardIndex === index}
                     currentHP={playerHP[index]}
                     maxHP={characterInfo.maxHP[card]}
+                    isDead={playerHP[index] <= 0}
                     onClick={() => {
-                      if (isAttacking || currentPlayerIndex !== playerIndex) return;
+                      if (isAttacking || currentPlayerIndex !== playerIndex || playerHP[index] <= 0) return;
                       
                       if (currentCardIndex === index) {
                         setCurrentCardIndex(-1);
