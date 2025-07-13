@@ -216,14 +216,14 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
           <div className={styles['game-end-content']}>
             {isWinner && (
               <>
-                <h1 className={styles['victory-text']}>🎉 VICTORY! 🎉</h1>
-                <p className={styles['game-end-message']}>You defeated your opponent!</p>
+                <h1 className={styles['victory-text']}>VICTORY!</h1>
+                <p className={styles['game-end-message']}>You're the GOAT</p>
               </>
             )}
             {isLoser && (
               <>
-                <h1 className={styles['defeat-text']}>💀 DEFEAT 💀</h1>
-                <p className={styles['game-end-message']}>All your cards have been defeated.</p>
+                <h1 className={styles['defeat-text']}>DEFEAT :(</h1>
+                <p className={styles['game-end-message']}>Better luck next time...</p>
               </>
             )}
             {!isWinner && !isLoser && (

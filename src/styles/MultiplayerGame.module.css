@@ -427,51 +427,6 @@
   z-index: 2;
 }
 
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-@keyframes glow {
-  from {
-    text-shadow: 0 0 5px white, 0 0 10px white, 0 0 15px white;
-  }
-  to {
-    text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
-  }
-}
-
-@keyframes specialGlow {
-  0% {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
-  }
-  100% {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-  }
-}
-
-@media (max-width: 768px) {
-  .game-container {
-    font-size: 10px;
-  }
-  
-  .game-container * {
-    font-size: inherit;
-  }
-
-  .ability-display {
-    height: 75%;
-  }
-
-  .vs-text {
-    font-size: 10rem;
-  }
-}
-
 /* Game End Overlay */
 .game-end-overlay {
   position: absolute;
@@ -509,7 +464,6 @@
   color: #f44336;
   margin: 0 0 1rem 0;
   text-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
-  animation: defeatPulse 1.5s infinite;
 }
 
 .game-end-text {
@@ -554,23 +508,69 @@
   }
 }
 
-@keyframes defeatPulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-
 @keyframes fadeInOut {
   0%, 100% {
     opacity: 0.7;
   }
   50% {
     opacity: 0.3;
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px white, 0 0 10px white, 0 0 15px white;
+  }
+  to {
+    text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+  }
+}
+
+@keyframes specialGlow {
+  0% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+  }
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    font-size: 10px;
+  }
+  
+  .game-container * {
+    font-size: inherit;
+  }
+
+  .ability-display {
+    height: 75%;
+  }
+
+  .vs-text {
+    font-size: 10rem;
+  }
+
+  .victory-text {
+    font-size: 8rem;
+  }
+
+  .game-end-message {
+    font-size: 3rem;
+  }
+
+  .return-message {
+    font-size: 2rem;
   }
 }
 
