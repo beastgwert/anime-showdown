@@ -21,6 +21,17 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
   const [opponentCards, setOpponentCards] = useState(gameState.players[playerIndex === 0 ? 1 : 0].deck || []);
+  // Initialize HP for player's cards based on character info
+  const [playerHP, setPlayerHP] = useState(() => {
+    const initialDeck = gameState.players[playerIndex].deck || [];
+    return initialDeck.map(cardName => characterInfo.maxHP?.[cardName] || 1000);
+  });
+  // Initialize HP for opponent's cards based on character info
+  const [opponentHP, setOpponentHP] = useState(() => {
+    const opponentIndex = playerIndex === 0 ? 1 : 0;
+    const initialDeck = gameState.players[opponentIndex].deck || [];
+    return initialDeck.map(cardName => characterInfo.maxHP?.[cardName] || 1000);
+  });
   const [backgroundGradient, setBackgroundGradient] = useState('linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)');
   const [showSpecialAbility, setShowSpecialAbility] = useState(false);
   const [isAttacking, setIsAttacking] = useState(false);
@@ -37,6 +48,8 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       console.log('Game state updated:', gameState);
     }
   }, [gameState]);
+
+
 
   useEffect(() => {
     const myColor = characterInfo.bgColors[playerCards[currentCardIndex]] || '#091023';
@@ -80,6 +93,27 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       setDamageDealt(damage);
       setAttackAnimation(prev => prev ? { ...prev, phase: 'hitting' } : null);
       
+      // Apply damage when the hit occurs using gameState values directly
+      if (gameState?.damageDealt && gameState?.targetPlayer !== undefined && gameState?.targetCardIndex !== undefined) {
+        if (gameState.targetPlayer === playerIndex) {
+          // Damage to player's card
+          setPlayerHP(prevHP => {
+            const newHP = [...prevHP];
+            newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
+            console.log(`Player ${playerIndex} card ${gameState.targetCardIndex} (${playerCards[gameState.targetCardIndex]}) took ${gameState.damageDealt} damage. HP: ${prevHP[gameState.targetCardIndex]} -> ${newHP[gameState.targetCardIndex]}`);
+            return newHP;
+          });
+        } else {
+          // Damage to opponent's card
+          setOpponentHP(prevHP => {
+            const newHP = [...prevHP];
+            newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
+            console.log(`Opponent card ${gameState.targetCardIndex} (${opponentCards[gameState.targetCardIndex]}) took ${gameState.damageDealt} damage. HP: ${prevHP[gameState.targetCardIndex]} -> ${newHP[gameState.targetCardIndex]}`);
+            return newHP;
+          });
+        }
+      }
+      
       // After showing damage briefly, start return animation
       setTimeout(() => {
         setAttackAnimation(prev => prev ? { ...prev, phase: 'returning' } : null);
@@ -92,7 +126,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
         }, 1500);
       }, 500);
     }, 1000);
-  }, [playerCards, opponentCards, gameState?.damageDealt]);
+  }, [playerCards, opponentCards, gameState?.damageDealt, gameState?.targetPlayer, gameState?.targetCardIndex, playerIndex]);
 
   // Watch for server-confirmed attacks and trigger animation
   useEffect(() => {
@@ -235,6 +269,8 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                   <MultiplayerCard 
                     card={card} 
                     isOpponent={true}
+                    currentHP={opponentHP[index]}
+                    maxHP={characterInfo.maxHP[card]}
                     isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex}
                     onClick={() => handleOpponentCardClick(index)}
                   />
@@ -374,6 +410,8 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     card={card} 
                     isOpponent={false} 
                     isSelected={currentCardIndex === index}
+                    currentHP={playerHP[index]}
+                    maxHP={characterInfo.maxHP[card]}
                     onClick={() => {
                       if (isAttacking || currentPlayerIndex !== playerIndex) return;
                       

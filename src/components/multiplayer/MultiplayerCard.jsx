@@ -1,16 +1,16 @@
 import styles from '../../styles/MultiplayerGame.module.css';
 import characterInfo from '../../character-info.jsx';
 
-export default function MultiplayerCard({ card, isOpponent = false, isSelected = false, onClick, showHP = true, isTargetable = false }) {
+export default function MultiplayerCard({ card, isOpponent = false, isSelected = false, onClick, showHP = true, isTargetable = false, currentHP, maxHP }) {
   if (!card) return null;
   
   const cardName = card.name || card;
   const imagePath = `/images/${cardName}.webp`;
   
-  // Get HP from character info (first element in health array)
-  const maxHP = characterInfo.health[cardName] ? characterInfo.health[cardName][0] : 100;
-  const currentHP = maxHP; // For now, assume full HP - this can be dynamic later
-  const hpPercentage = (currentHP / maxHP) * 100;
+  // Use provided HP values or fallback to character info
+  const cardMaxHP = maxHP || (characterInfo.health[cardName] ? characterInfo.health[cardName][0] : 100);
+  const cardCurrentHP = currentHP !== undefined ? currentHP : cardMaxHP;
+  const hpPercentage = (cardCurrentHP / cardMaxHP) * 100;
   
   // Determine HP bar color based on percentage
   let hpColor;
@@ -51,7 +51,7 @@ export default function MultiplayerCard({ card, isOpponent = false, isSelected =
               style={{ width: `${hpPercentage}%`, backgroundColor: hpColor }}
             ></div>
             <div className={styles['hp-text']}>
-              {currentHP}/{maxHP}
+              {cardCurrentHP}/{cardMaxHP}
             </div>
           </div>
         </div>
