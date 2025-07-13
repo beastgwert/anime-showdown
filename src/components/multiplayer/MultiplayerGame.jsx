@@ -16,7 +16,7 @@ const getDarkerShade = (hexColor, factor = 0.3) => {
   return `rgba(${r}, ${g}, ${b}, 0.9)`;
 };
 
-export default function MultiplayerGame({ gameState, playerIndex, sendGameAction, onGameEnd, handleOpponentDisconnect}) {
+export default function MultiplayerGame({ gameState, playerIndex, sendGameAction, sendGameActionFinished, onGameEnd, handleOpponentDisconnect}) {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
@@ -123,10 +123,13 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
           setAttackAnimation(null);
           setDamageDealt(null);
           setIsAttacking(false);
+          
+          // Notify server that animation is finished
+          sendGameActionFinished();
         }, 1500);
       }, 500);
     }, 1000);
-  }, [playerCards, opponentCards, gameState?.damageDealt, gameState?.targetPlayer, gameState?.targetCardIndex, playerIndex]);
+  }, [playerCards, opponentCards, gameState?.damageDealt, gameState?.targetPlayer, gameState?.targetCardIndex, playerIndex, sendGameActionFinished]);
 
   // Watch for server-confirmed attacks and trigger animation
   useEffect(() => {

@@ -109,6 +109,10 @@ export const connect = (customHandlers = {}) => {
     handlers.onGameStateUpdate(data);
   });
   
+  socket.on(SERVER_EVENTS.SWITCH_TURN, (data) => {
+    console.log('Turn switched');
+    handlers.onGameStateUpdate(data);
+  });
 
   socket.on(SERVER_EVENTS.GAME_OVER, (data) => {
     console.log('Game over:', data);
@@ -209,6 +213,18 @@ export const sendGameAction = (action) => {
 };
 
 /**
+ * Notifies server that game action animation has finished
+ */
+export const sendGameActionFinished = () => {
+  if (!socket || !socket.connected) {
+    handlers.onError({ type: 'connection', message: 'Not connected to server' });
+    return;
+  }
+  
+  socket.emit(CLIENT_EVENTS.GAME_ACTION_FINISHED);
+};
+
+/**
  * Disconnects socket from server
  */
 export const disconnect = () => {
@@ -244,6 +260,7 @@ export default {
   startGame,
   confirmLoadout,
   sendGameAction,
+  sendGameActionFinished,
   updateHandlers,
   getConnectionStatus,
   getSocketId

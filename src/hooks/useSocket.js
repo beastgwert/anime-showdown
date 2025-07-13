@@ -169,6 +169,10 @@ const useSocket = (initialHandlers = {}) => {
     socketClient.sendGameAction(action);
   }, []);
   
+  const sendGameActionFinished = useCallback(() => {
+    socketClient.sendGameActionFinished();
+  }, []);
+  
   return {
     // State
     connectionStatus,
@@ -188,6 +192,7 @@ const useSocket = (initialHandlers = {}) => {
     startGame,
     confirmLoadout,
     sendGameAction,
+    sendGameActionFinished,
     
     // Helpers
     isConnected: connectionStatus === CONNECTION_STATUS.CONNECTED,

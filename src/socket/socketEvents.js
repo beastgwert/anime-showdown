@@ -11,7 +11,7 @@ export const CLIENT_EVENTS = {
   START_GAME: 'start-game',
   CONFIRM_LOADOUT: 'confirm-loadout',
   GAME_ACTION: 'game-action',
-  CARD_PLAYED: 'card-played',
+  GAME_ACTION_FINISHED: 'game-action-finished',
   TURN_END: 'turn-end'
 };
 
@@ -27,6 +27,7 @@ export const SERVER_EVENTS = {
   PLAYING_STARTED: 'playing-started',
   GAME_STATE_UPDATE: 'game-state-update',
   PLAYER_TURN: 'player-turn',
+  SWITCH_TURN: 'switch-turn',
   GAME_OVER: 'game-over',
   ROOM_ERROR: 'room-error',
   GAME_ERROR: 'game-error'

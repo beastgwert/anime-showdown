@@ -22,6 +22,7 @@ export default function MultiplayerOverlay({ onClose }) {
     startGame,
     confirmLoadout,
     sendGameAction,
+    sendGameActionFinished,
     leaveRoom,
     isConnected,
     isInRoom
@@ -120,6 +121,7 @@ export default function MultiplayerOverlay({ onClose }) {
         playerIndex={playerIndex}
         roomCode={roomCode}
         sendGameAction={sendGameAction}
+        sendGameActionFinished={sendGameActionFinished}
         onGameEnd={() => {
           setStep('options');
         }}
