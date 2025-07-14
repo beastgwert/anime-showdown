@@ -330,6 +330,38 @@
   box-shadow: none !important;
 }
 
+/* Anya protection - pink border when damage is reduced */
+.anya-protection {
+  border: 3px solid #ff69b4 !important;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.6), inset 0 0 10px rgba(255, 105, 180, 0.2);
+  animation: anyaGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes anyaGlow {
+  0% {
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.6), inset 0 0 10px rgba(255, 105, 180, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(255, 105, 180, 0.8), inset 0 0 15px rgba(255, 105, 180, 0.3);
+  }
+}
+
+/* Makima damage distribution - red border when damage is distributed */
+.makima-distribution {
+  border: 3px solid #dc143c !important;
+  box-shadow: 0 0 15px rgba(220, 20, 60, 0.6), inset 0 0 10px rgba(220, 20, 60, 0.2);
+  animation: makimaDistribution 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes makimaDistribution {
+  0% {
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.6), inset 0 0 10px rgba(220, 20, 60, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(220, 20, 60, 0.8), inset 0 0 15px rgba(220, 20, 60, 0.3);
+  }
+}
+
 .card-image {
   flex: 1;
   width: 100%;

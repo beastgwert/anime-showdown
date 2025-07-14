@@ -1,7 +1,7 @@
 import styles from '../../styles/MultiplayerGame.module.css';
 import characterInfo from '../../character-info.jsx';
 
-export default function MultiplayerCard({ card, isOpponent = false, isSelected = false, onClick, showHP = true, isTargetable = false, currentHP, maxHP, isDead = false }) {
+export default function MultiplayerCard({ card, isOpponent = false, isSelected = false, onClick, showHP = true, isTargetable = false, currentHP, maxHP, isDead = false, hasAnyaProtection = false, hasMakimaDistribution = false }) {
   if (!card) return null;
   
   const cardName = card.name || card;
@@ -25,7 +25,7 @@ export default function MultiplayerCard({ card, isOpponent = false, isSelected =
   return (
     <div className={showHP ? styles['card-with-hp'] : ''}>
       <div 
-        className={`${styles['card']} ${isOpponent ? styles['opponent-card'] : styles['player-card']} ${isSelected ? styles['selected-card'] : ''} ${isTargetable && !isDead ? styles['targetable-card'] : ''} ${isDead ? styles['dead-card'] : ''}`}
+        className={`${styles['card']} ${isOpponent ? styles['opponent-card'] : styles['player-card']} ${isSelected ? styles['selected-card'] : ''} ${isTargetable && !isDead ? styles['targetable-card'] : ''} ${isDead ? styles['dead-card'] : ''} ${hasAnyaProtection ? styles['anya-protection'] : ''} ${hasMakimaDistribution ? styles['makima-distribution'] : ''}`}
         onClick={!isDead && onClick ? () => onClick() : undefined}
         style={{background: `linear-gradient(to bottom, ${characterInfo.bgColors[cardName] || '#6a5acd'}, #150911)`}}
       >

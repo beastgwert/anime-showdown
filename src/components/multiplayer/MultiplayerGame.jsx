@@ -21,12 +21,10 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
   const [opponentCards, setOpponentCards] = useState(gameState.players[playerIndex === 0 ? 1 : 0].deck || []);
-  // Initialize HP for player's cards based on character info
   const [playerHP, setPlayerHP] = useState(() => {
     const initialDeck = gameState.players[playerIndex].deck || [];
     return initialDeck.map(cardName => characterInfo.maxHP?.[cardName] || 1000);
   });
-  // Initialize HP for opponent's cards based on character info
   const [opponentHP, setOpponentHP] = useState(() => {
     const opponentIndex = playerIndex === 0 ? 1 : 0;
     const initialDeck = gameState.players[opponentIndex].deck || [];
@@ -41,6 +39,23 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   // Refs for card positions
   const playerCardRefs = useRef([]);
   const opponentCardRefs = useRef([]);
+
+  // Handle Makima's passive ability
+  const getDistributedDamageForCard = (cardIndex, isPlayerCard, totalDamage) => {
+    const hpArray = isPlayerCard ? playerHP : opponentHP;
+    const cards = isPlayerCard ? playerCards : opponentCards;
+    
+    if (!cards.includes('Makima')) {
+      return attackAnimation?.targetCardIndex === cardIndex ? totalDamage : 0;
+    }
+    
+    const aliveCount = hpArray.filter(hp => hp > 0).length;
+    if (aliveCount === 0 || hpArray[cardIndex] <= 0) {
+      return 0;
+    }
+    
+    return Math.floor(totalDamage / aliveCount);
+  };
 
   useEffect(() => {
     if (gameState && gameState.players) {
@@ -67,22 +82,10 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     }
   }, [gameState?.gamePhase, onGameEnd]);
 
-  // Automatically deselect card if it dies
-  useEffect(() => {
-    if (currentCardIndex !== -1 && playerHP[currentCardIndex] <= 0) {
-      setCurrentCardIndex(-1);
-      setShowSpecialAbility(false);
-    }
-  }, [currentCardIndex, playerHP]);
-
   // Check if all player cards are dead and end the game
   useEffect(() => {
-    // Only check if game is active and we have HP data
     if (gameState?.gamePhase === 'active' && playerHP.length > 0) {
-      const allPlayerCardsDead = playerHP.every(hp => hp <= 0);
-      
-      if (allPlayerCardsDead) {
-        console.log('All player cards are dead, ending game');
+      if (playerHP.every(hp => hp <= 0)) {
         sendGameEnd();
       }
     }
@@ -96,12 +99,9 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     const attackingCard = playerCards[attackingCardIndex];
     const targetCard = opponentCards[targetCardIndex];
     
-    // Use damage from gameState (calculated on server)
     const damage = gameState?.damageDealt || 0;
-    
     console.log(`${attackingCard} attacks ${targetCard} for ${damage} damage!`);
     
-    // Set up animation data
     setAttackAnimation({
       attackingCardIndex,
       targetCardIndex,
@@ -114,38 +114,72 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       setDamageDealt(damage);
       setAttackAnimation(prev => prev ? { ...prev, phase: 'hitting' } : null);
       
-      // Apply damage when the hit occurs using gameState values directly
       if (gameState?.damageDealt && gameState?.targetPlayer !== undefined && gameState?.targetCardIndex !== undefined) {
         if (gameState.targetPlayer === playerIndex) {
-          // Damage to player's card
           setPlayerHP(prevHP => {
             const newHP = [...prevHP];
-            newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
-            console.log(`Player ${playerIndex} card ${gameState.targetCardIndex} (${playerCards[gameState.targetCardIndex]}) took ${gameState.damageDealt} damage. HP: ${prevHP[gameState.targetCardIndex]} -> ${newHP[gameState.targetCardIndex]}`);
+            
+            if (playerCards.includes('Makima')) {
+              const aliveCardIndices = [];
+              for (let i = 0; i < prevHP.length; i++) {
+                if (prevHP[i] > 0) {
+                  aliveCardIndices.push(i);
+                }
+              }
+              
+              if (aliveCardIndices.length > 0) {
+                const distributedDamage = Math.floor(gameState.damageDealt / aliveCardIndices.length);
+                const remainderDamage = gameState.damageDealt % aliveCardIndices.length;
+                
+                aliveCardIndices.forEach((cardIndex, i) => {
+                  const damageToApply = distributedDamage + (i < remainderDamage ? 1 : 0);
+                  newHP[cardIndex] = Math.max(0, newHP[cardIndex] - damageToApply);
+                });
+              }
+            } else {
+              newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
+            }
+            
             return newHP;
           });
         } else {
-          // Damage to opponent's card
           setOpponentHP(prevHP => {
             const newHP = [...prevHP];
-            newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
-            console.log(`Opponent card ${gameState.targetCardIndex} (${opponentCards[gameState.targetCardIndex]}) took ${gameState.damageDealt} damage. HP: ${prevHP[gameState.targetCardIndex]} -> ${newHP[gameState.targetCardIndex]}`);
+            
+            if (opponentCards.includes('Makima')) {
+              const aliveCardIndices = [];
+              for (let i = 0; i < prevHP.length; i++) {
+                if (prevHP[i] > 0) {
+                  aliveCardIndices.push(i);
+                }
+              }
+              
+              if (aliveCardIndices.length > 0) {
+                const distributedDamage = Math.floor(gameState.damageDealt / aliveCardIndices.length);
+                const remainderDamage = gameState.damageDealt % aliveCardIndices.length;
+                
+                aliveCardIndices.forEach((cardIndex, i) => {
+                  const damageToApply = distributedDamage + (i < remainderDamage ? 1 : 0);
+                  newHP[cardIndex] = Math.max(0, newHP[cardIndex] - damageToApply);
+                });
+              }
+            } else {
+              newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
+            }
+            
             return newHP;
           });
         }
       }
       
-      // After showing damage briefly, start return animation
+      // Return animation
       setTimeout(() => {
         setAttackAnimation(prev => prev ? { ...prev, phase: 'returning' } : null);
-        
-        // After 1.5 seconds, complete animation and reset state
         setTimeout(() => {
           setAttackAnimation(null);
           setDamageDealt(null);
           setIsAttacking(false);
           setCurrentCardIndex(-1);
-          // Notify server that animation is finished
           sendGameActionFinished();
         }, 1500);
       }, 500);
@@ -155,7 +189,6 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   // Watch for server-confirmed attacks and trigger animation
   useEffect(() => {
     if (gameState?.isAttacking && !attackAnimation) {
-      // Only trigger animation if we're not already animating
       const attackingCardIndex = gameState.attackingCardIndex;
       const targetCardIndex = gameState.targetCardIndex;
       
@@ -166,25 +199,19 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   }, [gameState?.isAttacking, gameState?.attackingCardIndex, gameState?.targetCardIndex]);
 
   const handleOpponentCardClick = (opponentIndex) => {
-    // Check if it's the current player's turn and not already attacking
-    console.log("isAttacking: ", isAttacking);
-    console.log("gameState?.isAttacking: ", gameState?.isAttacking);
+    // console.log("isAttacking: ", isAttacking);
+    // console.log("gameState?.isAttacking: ", gameState?.isAttacking);
     if (currentPlayerIndex !== playerIndex || isAttacking || gameState?.isAttacking) {
       return;
     }
     
-    // Check if the target opponent card is dead
     if (opponentHP[opponentIndex] <= 0) {
       return;
     }
     
     if (currentCardIndex !== -1 && !showSpecialAbility) {
       console.log(`Attacking opponent card ${opponentIndex}: ${opponentCards[opponentIndex]} with ${playerCards[currentCardIndex]}`);
-      
-      // Set local attacking state to disable UI interactions
       setIsAttacking(true);
-      
-      // Send attack action to server (animation will trigger when server confirms)
       sendGameAction({
         type: 'attack',
         attackingCardIndex: currentCardIndex,
@@ -317,32 +344,41 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     maxHP={characterInfo.maxHP[card]}
                     isDead={opponentHP[index] <= 0}
                     isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex && opponentHP[index] > 0}
+                    hasAnyaProtection={attackAnimation && gameState?.targetPlayer !== playerIndex && attackAnimation.targetCardIndex === index && opponentCards.includes('Anya') && !gameState?.attackDodged}
+                    hasMakimaDistribution={attackAnimation && gameState?.targetPlayer !== playerIndex && opponentCards.includes('Makima') && opponentHP[index] > 0 && !gameState?.attackDodged}
                     onClick={() => handleOpponentCardClick(index)}
                   />
-                  {/* Damage display - show damage when this opponent card is the target */}
+                  {/* Damage/Dodge display - show when this opponent card is affected by attack */}
                   <AnimatePresence>
-                    {damageDealt && attackAnimation?.targetCardIndex === index && gameState?.targetPlayer !== playerIndex && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -20, scale: 0.5 }}
-                        animate={{ opacity: 1, y: -40, scale: 1.2 }}
-                        exit={{ opacity: 0, y: -60, scale: 0.8 }}
-                        transition={{ duration: 0.5 }}
-                        style={{
-                          position: 'absolute',
-                          top: '10%',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          color: '#ff4444',
-                          fontSize: '24px',
-                          fontWeight: 'bold',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-                          pointerEvents: 'none',
-                          zIndex: 1000
-                        }}
-                      >
-                        -{damageDealt}
-                      </motion.div>
-                    )}
+                    {(() => {
+                      const cardDamage = getDistributedDamageForCard(index, false, damageDealt || 0);
+                      const shouldShowDamage = ((damageDealt && damageDealt > 0) || gameState?.attackDodged) && 
+                        (attackAnimation?.targetCardIndex === index || (opponentCards.includes('Makima') && cardDamage > 0)) && 
+                        gameState?.targetPlayer !== playerIndex;
+                      
+                      return shouldShowDamage && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -20, scale: 0.5 }}
+                          animate={{ opacity: 1, y: -40, scale: 1.2 }}
+                          exit={{ opacity: 0, y: -60, scale: 0.8 }}
+                          transition={{ duration: 0.5 }}
+                          style={{
+                            position: 'absolute',
+                            top: '10%',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            color: gameState?.attackDodged ? '#00ff88' : '#ff4444',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                            pointerEvents: 'none',
+                            zIndex: 1000
+                          }}
+                        >
+                          {gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`}
+                        </motion.div>
+                      );
+                    })()}
                   </AnimatePresence>
                 </motion.div>
               );
@@ -402,10 +438,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
           {/* <div className={styles['player-label']}>Your Cards</div> */}
           <div className={styles['cards-container']}>
             {playerCards.slice(0, 3).map((card, index) => {
-              // Determine if this card is involved in the current attack animation
               const isPlayerAttacking = gameState?.attackingPlayer === playerIndex;
-              
-              // For animation, we need to determine source and target refs
               let sourceRef = null;
               let targetRef = null;
               let isAnimatingCard = false;
@@ -457,6 +490,8 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     currentHP={playerHP[index]}
                     maxHP={characterInfo.maxHP[card]}
                     isDead={playerHP[index] <= 0}
+                    hasAnyaProtection={attackAnimation && gameState?.targetPlayer === playerIndex && attackAnimation.targetCardIndex === index && playerCards.includes('Anya') && !gameState?.attackDodged}
+                    hasMakimaDistribution={attackAnimation && gameState?.targetPlayer === playerIndex && playerCards.includes('Makima') && playerHP[index] > 0 && !gameState?.attackDodged}
                     onClick={() => {
                       if (isAttacking || currentPlayerIndex !== playerIndex || playerHP[index] <= 0) return;
                       
@@ -468,30 +503,37 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                       }
                     }} 
                   />
-                  {/* Damage display - show damage when this player card is the target */}
+                  {/* Damage/Dodge display - show when this player card is affected by attack */}
                   <AnimatePresence>
-                    {damageDealt && attackAnimation?.targetCardIndex === index && gameState?.targetPlayer === playerIndex && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -20, scale: 0.5 }}
-                        animate={{ opacity: 1, y: -40, scale: 1.2 }}
-                        exit={{ opacity: 0, y: -60, scale: 0.8 }}
-                        transition={{ duration: 0.5 }}
-                        style={{
-                          position: 'absolute',
-                          top: '10%',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          color: '#ff4444',
-                          fontSize: '24px',
-                          fontWeight: 'bold',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-                          pointerEvents: 'none',
-                          zIndex: 1000
-                        }}
-                      >
-                        -{damageDealt}
-                      </motion.div>
-                    )}
+                    {(() => {
+                      const cardDamage = getDistributedDamageForCard(index, true, damageDealt || 0);
+                      const shouldShowDamage = ((damageDealt && damageDealt > 0) || gameState?.attackDodged) && 
+                        (attackAnimation?.targetCardIndex === index || (playerCards.includes('Makima') && cardDamage > 0)) && 
+                        gameState?.targetPlayer === playerIndex;
+                      
+                      return shouldShowDamage && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -20, scale: 0.5 }}
+                          animate={{ opacity: 1, y: -40, scale: 1.2 }}
+                          exit={{ opacity: 0, y: -60, scale: 0.8 }}
+                          transition={{ duration: 0.5 }}
+                          style={{
+                            position: 'absolute',
+                            top: '10%',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            color: gameState?.attackDodged ? '#00ff88' : '#ff4444',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                            pointerEvents: 'none',
+                            zIndex: 1000
+                          }}
+                        >
+                          {gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`}
+                        </motion.div>
+                      );
+                    })()}
                   </AnimatePresence>
                 </motion.div>
               );
