@@ -39,6 +39,23 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   // Refs for card positions
   const playerCardRefs = useRef([]);
   const opponentCardRefs = useRef([]);
+  
+  const timeoutRefs = useRef([]);
+  const clearAllTimeouts = useCallback(() => {
+    timeoutRefs.current.forEach(timeoutId => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    });
+    timeoutRefs.current = [];
+  }, []);
+  
+  // Cleanup on unmount or game end
+  useEffect(() => {
+    return () => {
+      clearAllTimeouts();
+    };
+  }, [clearAllTimeouts]);
 
   // Handle Makima's passive ability
   const getDistributedDamageForCard = (cardIndex, isPlayerCard, totalDamage) => {
@@ -76,11 +93,13 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
 
   useEffect(() => {
     if (gameState?.gamePhase === 'ended') {
+      // Clear all pending timeouts when game ends
+      clearAllTimeouts();
       setTimeout(() => {
         onGameEnd();
       }, 3000);
     }
-  }, [gameState?.gamePhase, onGameEnd]);
+  }, [gameState?.gamePhase, onGameEnd, clearAllTimeouts]);
 
   // Check if all player cards are dead and end the game
   useEffect(() => {
@@ -110,7 +129,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     });
     
     // After 1 second, deal damage (when card "hits" target)
-    setTimeout(() => {
+    const damageTimeout = setTimeout(() => {
       setDamageDealt(damage);
       setAttackAnimation(prev => prev ? { ...prev, phase: 'hitting' } : null);
       
@@ -173,17 +192,20 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       }
       
       // Return animation
-      setTimeout(() => {
+      const returnTimeout = setTimeout(() => {
         setAttackAnimation(prev => prev ? { ...prev, phase: 'returning' } : null);
-        setTimeout(() => {
+        const finishTimeout = setTimeout(() => {
           setAttackAnimation(null);
           setDamageDealt(null);
           setIsAttacking(false);
           setCurrentCardIndex(-1);
           sendGameActionFinished();
         }, 1500);
+        timeoutRefs.current.push(finishTimeout);
       }, 500);
+      timeoutRefs.current.push(returnTimeout);
     }, 1000);
+    timeoutRefs.current.push(damageTimeout);
   }, [playerCards, opponentCards, gameState?.damageDealt, gameState?.targetPlayer, gameState?.targetCardIndex, playerIndex, sendGameActionFinished]);
 
   // Watch for server-confirmed attacks and trigger animation

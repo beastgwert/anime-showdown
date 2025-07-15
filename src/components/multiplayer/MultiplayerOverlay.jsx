@@ -125,6 +125,7 @@ export default function MultiplayerOverlay({ onClose }) {
         sendGameActionFinished={sendGameActionFinished}
         sendGameEnd={sendGameEnd}
         onGameEnd={() => {
+          leaveRoom();
           setStep('options');
         }}
         handleOpponentDisconnect={handleOpponentDisconnect}

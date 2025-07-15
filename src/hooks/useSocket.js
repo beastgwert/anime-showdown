@@ -170,16 +170,22 @@ const useSocket = (initialHandlers = {}) => {
   }, []);
   
   const sendGameAction = useCallback((action) => {
-    socketClient.sendGameAction(action);
-  }, []);
+    if (roomData) {
+      socketClient.sendGameAction(action);
+    }
+  }, [roomData]);
   
   const sendGameActionFinished = useCallback(() => {
-    socketClient.sendGameActionFinished();
-  }, []);
+    if (roomData) {
+      socketClient.sendGameActionFinished();
+    }
+  }, [roomData]);
   
   const sendGameEnd = useCallback(() => {
-    socketClient.sendGameEnd();
-  }, []);
+    if (roomData) {
+      socketClient.sendGameEnd();
+    }
+  }, [roomData]);
   
   return {
     // State
