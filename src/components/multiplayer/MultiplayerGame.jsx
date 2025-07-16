@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DisconnectionNotice from './DisconnectionNotice';
 import styles from '../../styles/MultiplayerGame.module.css';
@@ -16,20 +16,19 @@ const getDarkerShade = (hexColor, factor = 0.3) => {
   return `rgba(${r}, ${g}, ${b}, 0.9)`;
 };
 
-export default function MultiplayerGame({ gameState, playerIndex, sendGameAction, sendGameActionFinished, sendGameEnd, onGameEnd, handleOpponentDisconnect}) {
+export default function MultiplayerGame({ gameState, playerIndex, sendGameAction, sendGameActionFinished, onGameEnd, handleOpponentDisconnect}) {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [playerCards, setPlayerCards] = useState(gameState.players[playerIndex].deck || []);
   const [opponentCards, setOpponentCards] = useState(gameState.players[playerIndex === 0 ? 1 : 0].deck || []);
-  const [playerHP, setPlayerHP] = useState(() => {
-    const initialDeck = gameState.players[playerIndex].deck || [];
-    return initialDeck.map(cardName => characterInfo.maxHP?.[cardName] || 1000);
-  });
-  const [opponentHP, setOpponentHP] = useState(() => {
-    const opponentIndex = playerIndex === 0 ? 1 : 0;
-    const initialDeck = gameState.players[opponentIndex].deck || [];
-    return initialDeck.map(cardName => characterInfo.maxHP?.[cardName] || 1000);
-  });
+  // Get HP data from server game state (memoized to prevent unnecessary re-renders)
+  const opponentIndex = playerIndex === 0 ? 1 : 0;
+  const playerHP = useMemo(() => gameState?.players?.[playerIndex]?.hp || [], [gameState?.players, playerIndex]);
+  const opponentHP = useMemo(() => gameState?.players?.[opponentIndex]?.hp || [], [gameState?.players, opponentIndex]);
+  
+  // Display HP state - delays HP bar updates until animation ends
+  const [displayPlayerHP, setDisplayPlayerHP] = useState([]);
+  const [displayOpponentHP, setDisplayOpponentHP] = useState([]);
   const [backgroundGradient, setBackgroundGradient] = useState('linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)');
   const [showSpecialAbility, setShowSpecialAbility] = useState(false);
   const [isAttacking, setIsAttacking] = useState(false);
@@ -101,55 +100,26 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     }
   }, [gameState?.gamePhase, onGameEnd, clearAllTimeouts]);
 
-  // Sung-jin-woo's special ability
+  // Update display HP immediately for healing (no animation delay for healing)
   useEffect(() => {
-    if (gameState?.isSpecialAbility && gameState?.healAmount) {
-      console.log(`Special ability healing detected: ${gameState.healAmount} HP`);
-      
-      // Determine which player used the special ability
-      const specialAbilityUser = gameState.specialAbilityUser;
-      const isPlayerSpecialAbility = specialAbilityUser === playerIndex;
-      
-      if (isPlayerSpecialAbility) {
-        setPlayerHP(prevHP => {
-          const newHP = prevHP.map((hp, index) => {
-            if (hp > 0) { 
-              const maxHP = characterInfo.maxHP[playerCards[index]];
-              const healAmount = Math.floor(maxHP * gameState.healAmount); 
-              const healedHP = Math.min(hp + healAmount, maxHP);
-              console.log(`Player card ${index} (${playerCards[index]}) healed from ${hp} to ${healedHP} (+${healAmount} HP, 15% of ${maxHP} max HP)`);
-              return healedHP;
-            }
-            return hp;
-          });
-          return newHP;
-        });
-      } else {
-        setOpponentHP(prevHP => {
-          const newHP = prevHP.map((hp, index) => {
-            if (hp > 0) { 
-              const maxHP = characterInfo.maxHP[opponentCards[index]];
-              const healAmount = Math.floor(maxHP * gameState.healAmount); 
-              const healedHP = Math.min(hp + healAmount, maxHP);
-              console.log(`Opponent card ${index} (${opponentCards[index]}) healed from ${hp} to ${healedHP} (+${healAmount} HP, 15% of ${maxHP} max HP)`);
-              return healedHP;
-            }
-            return hp;
-          });
-          return newHP;
-        });
-      }
+    if (gameState?.healAmount && gameState?.healAmount > 0) {
+      // Healing happens immediately, so update display HP right away
+      setDisplayPlayerHP([...playerHP]);
+      setDisplayOpponentHP([...opponentHP]);
     }
-  }, [gameState?.isSpecialAbility, gameState?.healAmount, gameState?.specialAbilityUser, gameState?.players, playerIndex, playerCards, opponentCards]);
+  }, [gameState?.healAmount, playerHP, opponentHP]);
 
-  // Check if all player cards are dead and end the game
+  // Initialize display HP state with server HP values
   useEffect(() => {
-    if (gameState?.gamePhase === 'active' && playerHP.length > 0) {
-      if (playerHP.every(hp => hp <= 0)) {
-        sendGameEnd();
-      }
+    if (playerHP.length > 0 && displayPlayerHP.length === 0) {
+      setDisplayPlayerHP([...playerHP]);
     }
-  }, [playerHP, gameState?.gamePhase, sendGameEnd]);
+    if (opponentHP.length > 0 && displayOpponentHP.length === 0) {
+      setDisplayOpponentHP([...opponentHP]);
+    }
+  }, [playerHP, opponentHP, displayPlayerHP.length, displayOpponentHP.length]);
+  
+  // Game end detection is now handled server-side automatically
 
   const handleSpecialAbility = (cardName) => {
     console.log(`${cardName}'s special ability was used`);
@@ -181,63 +151,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       setDamageDealt(damage);
       setAttackAnimation(prev => prev ? { ...prev, phase: 'hitting' } : null);
       
-      if (gameState?.damageDealt && gameState?.targetPlayer !== undefined && gameState?.targetCardIndex !== undefined) {
-        if (gameState.targetPlayer === playerIndex) {
-          setPlayerHP(prevHP => {
-            const newHP = [...prevHP];
-            
-            if (playerCards.includes('Makima')) {
-              const aliveCardIndices = [];
-              for (let i = 0; i < prevHP.length; i++) {
-                if (prevHP[i] > 0) {
-                  aliveCardIndices.push(i);
-                }
-              }
-              
-              if (aliveCardIndices.length > 0) {
-                const distributedDamage = Math.floor(gameState.damageDealt / aliveCardIndices.length);
-                const remainderDamage = gameState.damageDealt % aliveCardIndices.length;
-                
-                aliveCardIndices.forEach((cardIndex, i) => {
-                  const damageToApply = distributedDamage + (i < remainderDamage ? 1 : 0);
-                  newHP[cardIndex] = Math.max(0, newHP[cardIndex] - damageToApply);
-                });
-              }
-            } else {
-              newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
-            }
-            
-            return newHP;
-          });
-        } else {
-          setOpponentHP(prevHP => {
-            const newHP = [...prevHP];
-            
-            if (opponentCards.includes('Makima')) {
-              const aliveCardIndices = [];
-              for (let i = 0; i < prevHP.length; i++) {
-                if (prevHP[i] > 0) {
-                  aliveCardIndices.push(i);
-                }
-              }
-              
-              if (aliveCardIndices.length > 0) {
-                const distributedDamage = Math.floor(gameState.damageDealt / aliveCardIndices.length);
-                const remainderDamage = gameState.damageDealt % aliveCardIndices.length;
-                
-                aliveCardIndices.forEach((cardIndex, i) => {
-                  const damageToApply = distributedDamage + (i < remainderDamage ? 1 : 0);
-                  newHP[cardIndex] = Math.max(0, newHP[cardIndex] - damageToApply);
-                });
-              }
-            } else {
-              newHP[gameState.targetCardIndex] = Math.max(0, newHP[gameState.targetCardIndex] - gameState.damageDealt);
-            }
-            
-            return newHP;
-          });
-        }
-      }
+      // Damage is now applied server-side, no client-side HP modification needed
       
       // Return animation
       const returnTimeout = setTimeout(() => {
@@ -247,14 +161,19 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
           setDamageDealt(null);
           setIsAttacking(false);
           setCurrentCardIndex(-1);
+          
+          // Update display HP to match server HP at end of animation
+          setDisplayPlayerHP([...playerHP]);
+          setDisplayOpponentHP([...opponentHP]);
+          
           sendGameActionFinished();
-        }, 1500);
+        }, 500);
         timeoutRefs.current.push(finishTimeout);
       }, 500);
       timeoutRefs.current.push(returnTimeout);
     }, 1000);
     timeoutRefs.current.push(damageTimeout);
-  }, [playerCards, opponentCards, gameState?.damageDealt, gameState?.targetPlayer, gameState?.targetCardIndex, playerIndex, sendGameActionFinished]);
+  }, [playerCards, opponentCards, gameState?.damageDealt, sendGameActionFinished, playerHP, opponentHP]);
 
   // Watch for server-confirmed attacks and trigger animation
   useEffect(() => {
@@ -410,7 +329,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                   <MultiplayerCard 
                     card={card} 
                     isOpponent={true}
-                    currentHP={opponentHP[index]}
+                    currentHP={displayOpponentHP[index]}
                     maxHP={characterInfo.maxHP[card]}
                     isDead={opponentHP[index] <= 0}
                     isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex && opponentHP[index] > 0}
@@ -557,7 +476,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     card={card} 
                     isOpponent={false} 
                     isSelected={currentCardIndex === index}
-                    currentHP={playerHP[index]}
+                    currentHP={displayPlayerHP[index]}
                     maxHP={characterInfo.maxHP[card]}
                     isDead={playerHP[index] <= 0}
                     hasAnyaProtection={attackAnimation && gameState?.targetPlayer === playerIndex && attackAnimation.targetCardIndex === index && playerCards.includes('Anya') && !gameState?.attackDodged}

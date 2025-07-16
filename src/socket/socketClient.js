@@ -231,18 +231,6 @@ export const sendGameActionFinished = () => {
 };
 
 /**
- * Notifies server that the game should end (all player cards are dead)
- */
-export const sendGameEnd = () => {
-  if (!socket || !socket.connected) {
-    handlers.onError({ type: 'connection', message: 'Not connected to server' });
-    return;
-  }
-  
-  socket.emit(CLIENT_EVENTS.GAME_END);
-};
-
-/**
  * Disconnects socket from server
  */
 export const disconnect = () => {
@@ -279,7 +267,6 @@ export default {
   confirmLoadout,
   sendGameAction,
   sendGameActionFinished,
-  sendGameEnd,
   updateHandlers,
   getConnectionStatus,
   getSocketId

@@ -181,12 +181,6 @@ const useSocket = (initialHandlers = {}) => {
     }
   }, [roomData]);
   
-  const sendGameEnd = useCallback(() => {
-    if (roomData) {
-      socketClient.sendGameEnd();
-    }
-  }, [roomData]);
-  
   return {
     // State
     connectionStatus,
@@ -207,7 +201,6 @@ const useSocket = (initialHandlers = {}) => {
     confirmLoadout,
     sendGameAction,
     sendGameActionFinished,
-    sendGameEnd,
     
     // Helpers
     isConnected: connectionStatus === CONNECTION_STATUS.CONNECTED,
