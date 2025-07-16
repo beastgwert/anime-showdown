@@ -101,6 +101,47 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     }
   }, [gameState?.gamePhase, onGameEnd, clearAllTimeouts]);
 
+  // Sung-jin-woo's special ability
+  useEffect(() => {
+    if (gameState?.isSpecialAbility && gameState?.healAmount) {
+      console.log(`Special ability healing detected: ${gameState.healAmount} HP`);
+      
+      // Determine which player used the special ability
+      const specialAbilityUser = gameState.specialAbilityUser;
+      const isPlayerSpecialAbility = specialAbilityUser === playerIndex;
+      
+      if (isPlayerSpecialAbility) {
+        setPlayerHP(prevHP => {
+          const newHP = prevHP.map((hp, index) => {
+            if (hp > 0) { 
+              const maxHP = characterInfo.maxHP[playerCards[index]];
+              const healAmount = Math.floor(maxHP * gameState.healAmount); 
+              const healedHP = Math.min(hp + healAmount, maxHP);
+              console.log(`Player card ${index} (${playerCards[index]}) healed from ${hp} to ${healedHP} (+${healAmount} HP, 15% of ${maxHP} max HP)`);
+              return healedHP;
+            }
+            return hp;
+          });
+          return newHP;
+        });
+      } else {
+        setOpponentHP(prevHP => {
+          const newHP = prevHP.map((hp, index) => {
+            if (hp > 0) { 
+              const maxHP = characterInfo.maxHP[opponentCards[index]];
+              const healAmount = Math.floor(maxHP * gameState.healAmount); 
+              const healedHP = Math.min(hp + healAmount, maxHP);
+              console.log(`Opponent card ${index} (${opponentCards[index]}) healed from ${hp} to ${healedHP} (+${healAmount} HP, 15% of ${maxHP} max HP)`);
+              return healedHP;
+            }
+            return hp;
+          });
+          return newHP;
+        });
+      }
+    }
+  }, [gameState?.isSpecialAbility, gameState?.healAmount, gameState?.specialAbilityUser, gameState?.players, playerIndex, playerCards, opponentCards]);
+
   // Check if all player cards are dead and end the game
   useEffect(() => {
     if (gameState?.gamePhase === 'active' && playerHP.length > 0) {
@@ -112,6 +153,13 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
 
   const handleSpecialAbility = (cardName) => {
     console.log(`${cardName}'s special ability was used`);
+    
+    sendGameAction({
+      type: 'special_ability',
+      attackingCardIndex: currentCardIndex
+    });
+    setCurrentCardIndex(-1);
+    setShowSpecialAbility(false);
   }
 
   const startAttackAnimation = useCallback((attackingCardIndex, targetCardIndex) => {
