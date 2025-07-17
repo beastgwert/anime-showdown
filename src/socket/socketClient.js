@@ -114,6 +114,11 @@ export const connect = (customHandlers = {}) => {
     console.log('Turn switched');
     handlers.onGameStateUpdate(data);
   });
+  
+  socket.on(SERVER_EVENTS.PARALYSIS_SKIP_TURN, (data) => {
+    console.log('Enemy paralyzed - turn skipped');
+    handlers.onGameStateUpdate(data);
+  });
 
   socket.on(SERVER_EVENTS.GAME_OVER, (data) => {
     console.log('Game over:', data);

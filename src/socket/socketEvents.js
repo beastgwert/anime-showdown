@@ -29,6 +29,7 @@ export const SERVER_EVENTS = {
   GAME_STATE_UPDATE: 'game-state-update',
   PLAYER_TURN: 'player-turn',
   SWITCH_TURN: 'switch-turn',
+  PARALYSIS_SKIP_TURN: 'paralysis-skip-turn',
   GAME_OVER: 'game-over',
   ROOM_ERROR: 'room-error',
   GAME_ERROR: 'game-error',

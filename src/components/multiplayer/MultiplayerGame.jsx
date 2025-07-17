@@ -109,6 +109,14 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     }
   }, [gameState?.healAmount, playerHP, opponentHP]);
 
+  // Genos ability
+  useEffect(() => {
+    if (gameState?.specialAbilityType === 'sacrifice_blast' && gameState?.blastDamage && gameState?.targetCardIndex !== undefined) {
+      setDisplayPlayerHP([...playerHP]);
+      setDisplayOpponentHP([...opponentHP]);
+    }
+  }, [gameState?.specialAbilityType, gameState?.blastDamage, gameState?.targetCardIndex, playerHP, opponentHP]);
+
   // Initialize display HP state with server HP values
   useEffect(() => {
     if (playerHP.length > 0 && displayPlayerHP.length === 0) {
@@ -331,21 +339,22 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     isOpponent={true}
                     currentHP={displayOpponentHP[index]}
                     maxHP={characterInfo.maxHP[card]}
-                    isDead={opponentHP[index] <= 0}
+                    isDead={displayOpponentHP[index] <= 0}
                     isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex && opponentHP[index] > 0}
-                    hasAnyaProtection={attackAnimation && gameState?.targetPlayer !== playerIndex && attackAnimation.targetCardIndex === index && opponentCards.includes('Anya') && !gameState?.attackDodged}
-                    hasMakimaDistribution={attackAnimation && gameState?.targetPlayer !== playerIndex && opponentCards.includes('Makima') && opponentHP[index] > 0 && !gameState?.attackDodged}
+                    hasAnyaProtection={attackAnimation && gameState?.targetPlayer !== playerIndex && attackAnimation.targetCardIndex === index && opponentCards.includes('Anya') && opponentHP[opponentCards.indexOf('Anya')] > 0 && !gameState?.attackDodged}
+                    hasMakimaDistribution={attackAnimation && gameState?.targetPlayer !== playerIndex && opponentCards.includes('Makima') && opponentHP[opponentCards.indexOf('Makima')] > 0 && opponentHP[index] > 0 && !gameState?.attackDodged}
                     onClick={() => handleOpponentCardClick(index)}
                   />
-                  {/* Damage/Dodge display - show when this opponent card is affected by attack */}
+                  {/* Damage/Dodge/Paralysis display - show when this opponent card is affected by attack */}
                   <AnimatePresence>
                     {(() => {
                       const cardDamage = getDistributedDamageForCard(index, false, damageDealt || 0);
                       const shouldShowDamage = ((damageDealt && damageDealt > 0) || gameState?.attackDodged) && 
                         (attackAnimation?.targetCardIndex === index || (opponentCards.includes('Makima') && cardDamage > 0)) && 
                         gameState?.targetPlayer !== playerIndex;
+                      const shouldShowParalysis = gameState?.enemyParalyzed && gameState?.targetPlayer !== playerIndex;
                       
-                      return shouldShowDamage && (
+                      return (shouldShowDamage || shouldShowParalysis) && (
                         <motion.div
                           initial={{ opacity: 0, y: -20, scale: 0.5 }}
                           animate={{ opacity: 1, y: -40, scale: 1.2 }}
@@ -356,7 +365,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             top: '10%',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            color: gameState?.attackDodged ? '#00ff88' : '#ff4444',
+                            color: shouldShowParalysis ? '#f7ff44' : (gameState?.attackDodged ? '#00ff88' : '#ff4444'),
                             fontSize: '24px',
                             fontWeight: 'bold',
                             textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
@@ -364,7 +373,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             zIndex: 1000
                           }}
                         >
-                          {gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`}
+                          {shouldShowParalysis ? 'PARALYZED!' : (gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`)}
                         </motion.div>
                       );
                     })()}
@@ -478,9 +487,9 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     isSelected={currentCardIndex === index}
                     currentHP={displayPlayerHP[index]}
                     maxHP={characterInfo.maxHP[card]}
-                    isDead={playerHP[index] <= 0}
-                    hasAnyaProtection={attackAnimation && gameState?.targetPlayer === playerIndex && attackAnimation.targetCardIndex === index && playerCards.includes('Anya') && !gameState?.attackDodged}
-                    hasMakimaDistribution={attackAnimation && gameState?.targetPlayer === playerIndex && playerCards.includes('Makima') && playerHP[index] > 0 && !gameState?.attackDodged}
+                    isDead={displayPlayerHP[index] <= 0}
+                    hasAnyaProtection={attackAnimation && gameState?.targetPlayer === playerIndex && attackAnimation.targetCardIndex === index && playerCards.includes('Anya') && playerHP[playerCards.indexOf('Anya')] > 0 && !gameState?.attackDodged}
+                    hasMakimaDistribution={attackAnimation && gameState?.targetPlayer === playerIndex && playerCards.includes('Makima') && playerHP[playerCards.indexOf('Makima')] > 0 && playerHP[index] > 0 && !gameState?.attackDodged}
                     onClick={() => {
                       if (isAttacking || currentPlayerIndex !== playerIndex || playerHP[index] <= 0) return;
                       
@@ -492,15 +501,16 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                       }
                     }} 
                   />
-                  {/* Damage/Dodge display - show when this player card is affected by attack */}
+                  {/* Damage/Dodge/Paralysis display - show when this player card is affected by attack */}
                   <AnimatePresence>
                     {(() => {
                       const cardDamage = getDistributedDamageForCard(index, true, damageDealt || 0);
                       const shouldShowDamage = ((damageDealt && damageDealt > 0) || gameState?.attackDodged) && 
                         (attackAnimation?.targetCardIndex === index || (playerCards.includes('Makima') && cardDamage > 0)) && 
                         gameState?.targetPlayer === playerIndex;
+                      const shouldShowParalysis = gameState?.enemyParalyzed && gameState?.targetPlayer === playerIndex;
                       
-                      return shouldShowDamage && (
+                      return (shouldShowDamage || shouldShowParalysis) && (
                         <motion.div
                           initial={{ opacity: 0, y: -20, scale: 0.5 }}
                           animate={{ opacity: 1, y: -40, scale: 1.2 }}
@@ -511,7 +521,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             top: '10%',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            color: gameState?.attackDodged ? '#00ff88' : '#ff4444',
+                            color: shouldShowParalysis ? '#f7ff44' : (gameState?.attackDodged ? '#00ff88' : '#ff4444'),
                             fontSize: '24px',
                             fontWeight: 'bold',
                             textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
@@ -519,7 +529,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             zIndex: 1000
                           }}
                         >
-                          {gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`}
+                          {shouldShowParalysis ? 'PARALYZED!' : (gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`)}
                         </motion.div>
                       );
                     })()}
