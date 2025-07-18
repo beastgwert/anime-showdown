@@ -1,5 +1,5 @@
  const characterInfo = {
-   playableCharacters: ['Sung-jin-woo', 'Mikasa', 'Luffy', 'Gojo', 'Natsu', 'Ichigo', 'Kakashi', 'Anya', 'Mudkip', 'Genos', 'Makima'],
+   playableCharacters: ['Sung-jin-woo', 'Mikasa', 'Luffy', 'Saitama','Gojo', 'Natsu', 'Kakashi', 'Anya', 'Mudkip', 'Genos', 'Makima'],
    abilities: {
       'Sung-jin-woo': ['Mutilation', 'Shadow Regeneration'],
       'Mikasa': ['Thunder Spears', 'Charge'],
@@ -11,7 +11,8 @@
       'Anya': ['Friendship Crash', 'Cuteness Overload'],
       'Mudkip': ['Tackle', 'Mud-Slap'],
       'Genos': ['Incineration Cannon', 'Self-Destruction'],
-      'Makima': ['Bang!', 'Contract Holder']
+      'Makima': ['Bang!', 'Contract Holder'],
+      'Saitama': ['One Punch', 'One HP']
    },
    isSpecialAbilityActive: {
       'Sung-jin-woo': true,
@@ -25,6 +26,7 @@
       'Mudkip': true,
       'Genos': true,
       'Makima': false,
+      'Saitama': false,
    },
    abilityDamages: {
       'Sung-jin-woo': [160, 200],
@@ -38,6 +40,7 @@
       'Mudkip': [90, 130],
       'Genos': [100, 120],
       'Makima': [95, 135],
+      'Saitama': [99999, 99999]
    },
    maxHP: {
       'Sung-jin-woo': 500,
@@ -51,6 +54,7 @@
       'Mudkip': 350,
       'Genos': 550,
       'Makima': 425,
+      'Saitama': 1
    },
    enemyAbilityDamages: {
       'Kirito': [200, 250],
@@ -87,6 +91,7 @@
       'Mudkip': 'Mudkip flings mud at the enemy, lowering opponent\'s accuracy by 50% for 2 rounds',
       'Genos': 'Genos self-destructs, dealing 0.5x damage of HP lost to a random enemy',
       "Makima": 'Makima forms a contract with the team, equally distributing damage when she is attacked (passive)',
+      'Saitama': 'Saitama is asleep...'
    },
    bgColors: {
       'Kirito': '#0A20A0',
