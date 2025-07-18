@@ -34,6 +34,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
   const [isAttacking, setIsAttacking] = useState(false);
   const [attackAnimation, setAttackAnimation] = useState(null);
   const [damageDealt, setDamageDealt] = useState(null);
+  const [burnDamageDisplay, setBurnDamageDisplay] = useState(null);
   
   // Refs for card positions
   const playerCardRefs = useRef([]);
@@ -116,6 +117,33 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       setDisplayOpponentHP([...opponentHP]);
     }
   }, [gameState?.specialAbilityType, gameState?.blastDamage, gameState?.targetCardIndex, playerHP, opponentHP]);
+
+  // Burn damage detection - delay visual effects until after attack animation
+  useEffect(() => {
+    if (gameState?.burnDamageApplied && gameState?.burnedPlayer !== undefined) {
+      // Don't update display HP immediately - wait for burn animation
+      
+      // Delay burn visual effects until after attack animation finishes (2 seconds)
+      const burnDelayTimeout = setTimeout(() => {
+        // Show burn damage display and orange borders
+        setBurnDamageDisplay({
+          amount: gameState.burnDamageAmount,
+          targetPlayer: gameState.burnedPlayer
+        });
+        
+        // Update display HP when burn animation starts (HP bars decrease with -50 damage text)
+        setDisplayPlayerHP([...playerHP]);
+        setDisplayOpponentHP([...opponentHP]);
+        
+        // Clear burn damage display after animation
+        const burnClearTimeout = setTimeout(() => {
+          setBurnDamageDisplay(null);
+        }, 1000);
+        timeoutRefs.current.push(burnClearTimeout);
+      }, 1000); // Wait for attack animation to finish
+      timeoutRefs.current.push(burnDelayTimeout);
+    }
+  }, [gameState?.burnDamageApplied, gameState?.burnedPlayer, gameState?.burnDamageAmount]);
 
   // Initialize display HP state with server HP values
   useEffect(() => {
@@ -343,9 +371,10 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     isTargetable={currentCardIndex !== -1 && !showSpecialAbility && !isAttacking && currentPlayerIndex === playerIndex && opponentHP[index] > 0}
                     hasAnyaProtection={attackAnimation && gameState?.targetPlayer !== playerIndex && attackAnimation.targetCardIndex === index && opponentCards.includes('Anya') && opponentHP[opponentCards.indexOf('Anya')] > 0 && !gameState?.attackDodged}
                     hasMakimaDistribution={attackAnimation && gameState?.targetPlayer !== playerIndex && opponentCards.includes('Makima') && opponentHP[opponentCards.indexOf('Makima')] > 0 && opponentHP[index] > 0 && !gameState?.attackDodged}
+                    hasBurnEffect={burnDamageDisplay && burnDamageDisplay.targetPlayer === opponentIndex && displayOpponentHP[index] > 0}
                     onClick={() => handleOpponentCardClick(index)}
                   />
-                  {/* Damage/Dodge/Paralysis display - show when this opponent card is affected by attack */}
+                  {/* Damage/Dodge/Paralysis/Burn display - show when this opponent card is affected by attack */}
                   <AnimatePresence>
                     {(() => {
                       const cardDamage = getDistributedDamageForCard(index, false, damageDealt || 0);
@@ -353,8 +382,9 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                         (attackAnimation?.targetCardIndex === index || (opponentCards.includes('Makima') && cardDamage > 0)) && 
                         gameState?.targetPlayer !== playerIndex;
                       const shouldShowParalysis = gameState?.enemyParalyzed && gameState?.targetPlayer !== playerIndex;
+                      const shouldShowBurnDamage = burnDamageDisplay && burnDamageDisplay.targetPlayer === opponentIndex && displayOpponentHP[index] > 0;
                       
-                      return (shouldShowDamage || shouldShowParalysis) && (
+                      return (shouldShowDamage || shouldShowParalysis || shouldShowBurnDamage) && (
                         <motion.div
                           initial={{ opacity: 0, y: -20, scale: 0.5 }}
                           animate={{ opacity: 1, y: -40, scale: 1.2 }}
@@ -365,7 +395,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             top: '10%',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            color: shouldShowParalysis ? '#f7ff44' : (gameState?.attackDodged ? '#00ff88' : '#ff4444'),
+                            color: shouldShowBurnDamage ? '#ff8c00' : (shouldShowParalysis ? '#f7ff44' : (gameState?.attackDodged ? '#00ff88' : '#ff4444')),
                             fontSize: '24px',
                             fontWeight: 'bold',
                             textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
@@ -373,7 +403,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             zIndex: 1000
                           }}
                         >
-                          {shouldShowParalysis ? 'PARALYZED!' : (gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`)}
+                          {shouldShowBurnDamage ? `-${burnDamageDisplay.amount}` : (shouldShowParalysis ? 'PARALYZED!' : (gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`))}
                         </motion.div>
                       );
                     })()}
@@ -490,6 +520,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     isDead={displayPlayerHP[index] <= 0}
                     hasAnyaProtection={attackAnimation && gameState?.targetPlayer === playerIndex && attackAnimation.targetCardIndex === index && playerCards.includes('Anya') && playerHP[playerCards.indexOf('Anya')] > 0 && !gameState?.attackDodged}
                     hasMakimaDistribution={attackAnimation && gameState?.targetPlayer === playerIndex && playerCards.includes('Makima') && playerHP[playerCards.indexOf('Makima')] > 0 && playerHP[index] > 0 && !gameState?.attackDodged}
+                    hasBurnEffect={burnDamageDisplay && burnDamageDisplay.targetPlayer === playerIndex && displayPlayerHP[index] > 0}
                     onClick={() => {
                       if (isAttacking || currentPlayerIndex !== playerIndex || playerHP[index] <= 0) return;
                       
@@ -501,7 +532,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                       }
                     }} 
                   />
-                  {/* Damage/Dodge/Paralysis display - show when this player card is affected by attack */}
+                  {/* Damage/Dodge/Paralysis/Burn display - show when this player card is affected by attack */}
                   <AnimatePresence>
                     {(() => {
                       const cardDamage = getDistributedDamageForCard(index, true, damageDealt || 0);
@@ -509,8 +540,9 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                         (attackAnimation?.targetCardIndex === index || (playerCards.includes('Makima') && cardDamage > 0)) && 
                         gameState?.targetPlayer === playerIndex;
                       const shouldShowParalysis = gameState?.enemyParalyzed && gameState?.targetPlayer === playerIndex;
+                      const shouldShowBurnDamage = burnDamageDisplay && burnDamageDisplay.targetPlayer === playerIndex && displayPlayerHP[index] > 0;
                       
-                      return (shouldShowDamage || shouldShowParalysis) && (
+                      return (shouldShowDamage || shouldShowParalysis || shouldShowBurnDamage) && (
                         <motion.div
                           initial={{ opacity: 0, y: -20, scale: 0.5 }}
                           animate={{ opacity: 1, y: -40, scale: 1.2 }}
@@ -521,7 +553,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             top: '10%',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            color: shouldShowParalysis ? '#f7ff44' : (gameState?.attackDodged ? '#00ff88' : '#ff4444'),
+                            color: shouldShowBurnDamage ? '#ff8c00' : (shouldShowParalysis ? '#f7ff44' : (gameState?.attackDodged ? '#00ff88' : '#ff4444')),
                             fontSize: '24px',
                             fontWeight: 'bold',
                             textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
@@ -529,7 +561,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                             zIndex: 1000
                           }}
                         >
-                          {shouldShowParalysis ? 'PARALYZED!' : (gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`)}
+                          {shouldShowBurnDamage ? `-${burnDamageDisplay.amount}` : (shouldShowParalysis ? 'PARALYZED!' : (gameState?.attackDodged ? 'DODGED!' : `-${cardDamage}`))}
                         </motion.div>
                       );
                     })()}
