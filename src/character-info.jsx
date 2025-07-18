@@ -78,7 +78,7 @@
    multiplayerAbilityDescription: {
       'Sung-jin-woo': 'Shadows heal allies for a fraction of their maximum health',
       'Mikasa': 'Mikasa\'s charges her weapon, granting her team a chance to paralyze the enemy (passive)',
-      'Luffy': 'Increases Luffy\'s damage for 2 rounds (does not stack)',
+      'Luffy': 'Luffy gets big, increasing ally damage for 2 rounds (does not stack)',
       'Gojo': 'Gojo distorts space, granting dodge change to allies (passive)',
       'Natsu': 'Natsu transforms, increasing damage with a small chance to paralyze enemies for 3 rounds',
       'Ichigo': 'Ichigo summons his Zangetsu and his next attack deals 2/3 of the enemy\'s remaining health',
