@@ -36,7 +36,7 @@
       'Kakashi': [150, 200],
       'Anya': [125, 175],
       'Mudkip': [90, 130],
-      'Genos': [200, 210],
+      'Genos': [100, 120],
       'Makima': [95, 135],
    },
    maxHP: {
@@ -85,7 +85,7 @@
       'Kakashi': 'Kakashi gets serious, granting allies crit chance (passive)',
       'Anya': 'Anya\'s presence lowers surrounding aggression, decreasing damage of nearby enemies (passive)',
       'Mudkip': 'Mudkip flings mud at the enemy, lowering opponent\'s accuracy by 50% for 2 rounds',
-      'Genos': 'Genos self-destructs, dealing 0.75x damage of HP lost',
+      'Genos': 'Genos self-destructs, dealing 0.5x damage of HP lost to a random enemy',
       "Makima": 'Makima forms a contract with the team, equally distributing damage when she is attacked (passive)',
    },
    bgColors: {
