@@ -107,8 +107,14 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       // Healing happens immediately, so update display HP right away
       setDisplayPlayerHP([...playerHP]);
       setDisplayOpponentHP([...opponentHP]);
+      
+      // Send acknowledgment that healing has been processed
+      // Use a small delay to ensure HP display updates are complete
+      setTimeout(() => {
+        sendGameActionFinished();
+      }, 100);
     }
-  }, [gameState?.healAmount, playerHP, opponentHP]);
+  }, [gameState?.healAmount, playerHP, opponentHP, sendGameActionFinished]);
 
   // Genos ability
   useEffect(() => {
