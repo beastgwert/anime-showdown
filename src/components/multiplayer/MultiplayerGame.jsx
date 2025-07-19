@@ -62,7 +62,8 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
     const hpArray = isPlayerCard ? playerHP : opponentHP;
     const cards = isPlayerCard ? playerCards : opponentCards;
     
-    if (!cards.includes('Makima')) {
+    const makimaIndex = cards.indexOf('Makima');
+    if (makimaIndex === -1 || hpArray[makimaIndex] <= 0) {
       return attackAnimation?.targetCardIndex === cardIndex ? totalDamage : 0;
     }
     
@@ -385,7 +386,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     {(() => {
                       const cardDamage = getDistributedDamageForCard(index, false, damageDealt || 0);
                       const shouldShowDamage = ((damageDealt && damageDealt > 0) || gameState?.attackDodged) && 
-                        (attackAnimation?.targetCardIndex === index || (opponentCards.includes('Makima') && cardDamage > 0)) && 
+                        (attackAnimation?.targetCardIndex === index || (opponentCards.includes('Makima') && opponentHP[opponentCards.indexOf('Makima')] > 0 && cardDamage > 0)) && 
                         gameState?.targetPlayer !== playerIndex;
                       const shouldShowParalysis = gameState?.enemyParalyzed && gameState?.targetPlayer !== playerIndex;
                       const shouldShowBurnDamage = burnDamageDisplay && burnDamageDisplay.targetPlayer === opponentIndex && displayOpponentHP[index] > 0;
@@ -543,7 +544,7 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
                     {(() => {
                       const cardDamage = getDistributedDamageForCard(index, true, damageDealt || 0);
                       const shouldShowDamage = ((damageDealt && damageDealt > 0) || gameState?.attackDodged) && 
-                        (attackAnimation?.targetCardIndex === index || (playerCards.includes('Makima') && cardDamage > 0)) && 
+                        (attackAnimation?.targetCardIndex === index || (playerCards.includes('Makima') && playerHP[playerCards.indexOf('Makima')] > 0 && cardDamage > 0)) && 
                         gameState?.targetPlayer === playerIndex;
                       const shouldShowParalysis = gameState?.enemyParalyzed && gameState?.targetPlayer === playerIndex;
                       const shouldShowBurnDamage = burnDamageDisplay && burnDamageDisplay.targetPlayer === playerIndex && displayPlayerHP[index] > 0;

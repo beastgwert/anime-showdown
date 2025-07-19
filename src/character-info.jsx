@@ -90,7 +90,7 @@
       'Anya': 'Anya\'s presence lowers surrounding aggression, decreasing damage of nearby enemies (passive)',
       'Mudkip': 'Mudkip flings mud at the enemy, lowering opponent\'s accuracy by 50% for 2 rounds',
       'Genos': 'Genos self-destructs, dealing 0.5x damage of HP lost to a random enemy (cannot kill)',
-      "Makima": 'Makima forms a contract with the team, equally distributing damage when she is attacked (passive)',
+      "Makima": 'Makima forms a contract with the team, equally distributing damage when an ally is attacked (passive)',
       'Saitama': 'Saitama is asleep...'
    },
    bgColors: {
