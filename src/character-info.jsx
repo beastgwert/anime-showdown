@@ -43,17 +43,17 @@
       'Saitama': [99999, 99999]
    },
    maxHP: {
-      'Sung-jin-woo': 500,
-      'Mikasa': 450,
-      'Luffy': 450,
-      'Gojo': 375,
-      'Natsu': 400,
-      'Ichigo': 375,
-      'Kakashi': 400,
-      'Anya': 450,
-      'Mudkip': 425,
-      'Genos': 550,
-      'Makima': 425,
+      'Sung-jin-woo': 625,
+      'Mikasa': 550,
+      'Luffy': 550,
+      'Gojo': 500,
+      'Natsu': 500,
+      'Ichigo': 475,
+      'Kakashi': 500,
+      'Anya': 550,
+      'Mudkip': 525,
+      'Genos': 650,
+      'Makima': 475,
       'Saitama': 1
    },
    enemyAbilityDamages: {
