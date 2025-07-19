@@ -97,9 +97,9 @@ export default function MultiplayerGame({ gameState, playerIndex, sendGameAction
       clearAllTimeouts();
       setTimeout(() => {
         onGameEnd();
-      }, 3000);
+      }, 5000);
     }
-  }, [gameState?.gamePhase, onGameEnd, clearAllTimeouts]);
+  }, [gameState?.gamePhase]);
 
   // Update display HP immediately for healing (no animation delay for healing)
   useEffect(() => {
