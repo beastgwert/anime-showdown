@@ -102,3 +102,39 @@
     background: transparent;
     color: white;
 }
+
+.infoIcon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10000;
+    padding: 0;
+}
+
+.infoIcon img {
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) invert(1); /* Makes it white */
+    transition: filter 0.2s ease;
+}
+
+.infoIcon:hover img {
+    transition: transform 0.2s ease;
+    transform: scale(1.1); /* Makes it black on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .infoIcon {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .infoIcon img {
+        width: 20px;
+        height: 20px;
+    }
+}

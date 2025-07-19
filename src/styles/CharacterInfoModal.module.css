@@ -1,0 +1,219 @@
+:root {
+  --primary-color: #e2e9f2;
+  --primary-color-10: rgba(74, 158, 255, 0.1);
+  --primary-color-20: rgba(74, 158, 255, 0.2);
+  --primary-color-30: rgba(74, 158, 255, 0.3);
+  --primary-color-40: rgba(74, 158, 255, 0.4);
+  --overlay-dark: rgba(0, 0, 0, 0.8);
+  --background-dark-20: rgba(0, 0, 0, 0.2);
+  --white-05: rgba(255, 255, 255, 0.05);
+  --white-10: rgba(255, 255, 255, 0.1);
+  --text-white: #fff;
+  --text-light-gray: #ddd;
+  --text-gray: #ccc;
+  --gradient-start: #1a1a2e;
+  --gradient-middle: #16213e;
+  --gradient-end: #0f3460;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--overlay-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modalContent {
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-middle) 50%, var(--gradient-end) 100%);
+  border-radius: 15px;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 10px 30px var(--primary-color-30);
+}
+
+/* Custom scrollbar styling to respect border radius */
+.charactersGrid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.charactersGrid::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.charactersGrid::-webkit-scrollbar-thumb {
+  background: var(--primary-color-40);
+  border-radius: 10px;
+  border: 1px solid var(--primary-color);
+}
+
+.charactersGrid::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Firefox scrollbar styling */
+.charactersGrid {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) transparent;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid var(--primary-color);
+  background: var(--primary-color-10);
+}
+
+.modalHeader h2 {
+  color: var(--primary-blue);
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: var(--white-10);
+}
+
+.closeButton img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.charactersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.characterCard {
+  background: var(--white-05);
+  border: 1px solid var(--primary-color-30);
+  border-radius: 10px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.characterName {
+  color: var(--primary-blue);
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.characterStats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: var(--background-dark-20);
+  border-radius: 5px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statLabel {
+  color: var(--text-gray);
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.statValue {
+  color: var(--text-white);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.abilities {
+  margin-top: 15px;
+}
+
+.abilitySection {
+  margin-bottom: 15px;
+}
+
+.abilityTitle {
+  color: var(--primary-blue);
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.abilityList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.abilityItem {
+  background: var(--primary-color-20);
+  color: var(--text-white);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  border: 1px solid var(--primary-color-40);
+}
+
+.abilityDescription {
+  color: var(--text-light-gray);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 8px;
+  background: var(--background-dark-20);
+  border-radius: 5px;
+  border-left: 3px solid var(--primary-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95vw;
+    max-height: 85vh;
+  }
+  
+  .charactersGrid {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 15px;
+  }
+  
+  .modalHeader {
+    padding: 15px 20px;
+  }
+  
+  .modalHeader h2 {
+    font-size: 20px;
+  }
+}

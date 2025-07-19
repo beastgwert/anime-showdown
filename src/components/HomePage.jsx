@@ -4,12 +4,14 @@ import styles from '../styles/HomePage.module.css';
 import { createApiUrl } from '../config/api';
 import { useState, useEffect } from 'react';
 import MultiplayerOverlay from './multiplayer/MultiplayerOverlay';
+import CharacterInfoModal from './CharacterInfoModal';
 
 export default function HomePage(){
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [showMultiplayerOverlay, setShowMultiplayerOverlay] = useState(false);
+    const [showCharacterInfo, setShowCharacterInfo] = useState(false);
 
     // Check authentication status on component mount
     useEffect(() => {
@@ -84,6 +86,14 @@ export default function HomePage(){
 
     return (
         <div className={`${styles['homepage-main']} page`}>
+            <button 
+                className={styles.infoIcon}
+                onClick={() => setShowCharacterInfo(true)}
+                aria-label="Character Information"
+            >
+                <img src="/icons/info.svg" alt="Info" />
+            </button>
+            
             <div className={styles['homepage-content']}>
                 <p className={styles.transparent}>Anime Showdown</p>
                 <div className={styles['homepage-caption']}><p className={styles['typed-out']}>A turn-based character card game!</p></div>
@@ -99,6 +109,11 @@ export default function HomePage(){
                 {showMultiplayerOverlay && (
                     <MultiplayerOverlay onClose={() => setShowMultiplayerOverlay(false)} />
                 )}
+                
+                <CharacterInfoModal 
+                    isOpen={showCharacterInfo} 
+                    onClose={() => setShowCharacterInfo(false)} 
+                />
             </div>
             <div className={styles['page-footer']}>
                 <p><a target="_blank" rel="noopener noreferrer" href="https://tinyurl.com/mru4bk9d">Lofi Anime Wallpaper</a> 2023</p>
