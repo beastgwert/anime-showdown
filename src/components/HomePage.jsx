@@ -4,7 +4,7 @@ import styles from '../styles/HomePage.module.css';
 import { createApiUrl } from '../config/api';
 import { useState, useEffect } from 'react';
 import MultiplayerOverlay from './multiplayer/MultiplayerOverlay';
-import CharacterInfoModal from './CharacterInfoModal';
+import InfoModal from './InfoModal';
 
 export default function HomePage(){
     const navigate = useNavigate();
@@ -110,7 +110,7 @@ export default function HomePage(){
                     <MultiplayerOverlay onClose={() => setShowMultiplayerOverlay(false)} />
                 )}
                 
-                <CharacterInfoModal 
+                <InfoModal 
                     isOpen={showCharacterInfo} 
                     onClose={() => setShowCharacterInfo(false)} 
                 />

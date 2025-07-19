@@ -43,38 +43,39 @@
 }
 
 /* Custom scrollbar styling to respect border radius */
-.charactersGrid::-webkit-scrollbar {
+.tabContent::-webkit-scrollbar {
   width: 8px;
 }
 
-.charactersGrid::-webkit-scrollbar-track {
+.tabContent::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 10px;
 }
 
-.charactersGrid::-webkit-scrollbar-thumb {
+.tabContent::-webkit-scrollbar-thumb {
   background: var(--primary-color-40);
   border-radius: 10px;
   border: 1px solid var(--primary-color);
 }
 
-.charactersGrid::-webkit-scrollbar-thumb:hover {
+.tabContent::-webkit-scrollbar-thumb:hover {
   background: var(--primary-color);
 }
 
 /* Firefox scrollbar styling */
-.charactersGrid {
+.tabContent {
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) transparent;
 }
 
 .modalHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid var(--primary-color);
   background: var(--primary-color-10);
+  position: relative;
 }
 
 .modalHeader h2 {
@@ -91,6 +92,10 @@
   padding: 5px;
   border-radius: 50%;
   transition: background-color 0.2s;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .closeButton:hover {
@@ -101,6 +106,97 @@
   width: 24px;
   height: 24px;
   filter: brightness(0) invert(1);
+}
+
+/* Tab Styles */
+.tabContainer {
+  display: flex;
+  border-bottom: 1px solid var(--primary-color-30);
+  background: var(--white-05);
+}
+
+.tab {
+  flex: 1;
+  padding: 15px 20px;
+  background: none;
+  border: none;
+  color: var(--text-gray);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.tab:hover {
+  background: var(--white-10);
+  color: var(--text-white);
+}
+
+.activeTab {
+  color: var(--primary-color) !important;
+  background: var(--primary-color-10) !important;
+  border-bottom-color: var(--primary-color) !important;
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Rules Content Styles */
+.rulesContent {
+  padding: 30px;
+  color: var(--text-white);
+}
+
+.rulesSection {
+  margin-bottom: 30px;
+}
+
+.rulesSection h3 {
+  color: var(--primary-color);
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 15px 0;
+  border-bottom: 2px solid var(--primary-color-30);
+  padding-bottom: 8px;
+}
+
+.rulesSection p {
+  color: var(--text-light-gray);
+  line-height: 1.6;
+  margin: 0 0 15px 0;
+  font-size: 16px;
+}
+
+.rulesSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rulesSection li {
+  color: var(--text-light-gray);
+  line-height: 1.6;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+  font-size: 15px;
+}
+
+.rulesSection li::before {
+  content: '•';
+  color: var(--primary-color);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  font-size: 18px;
+}
+
+.rulesSection li strong {
+  color: var(--text-white);
+  font-weight: 600;
 }
 
 .charactersGrid {
