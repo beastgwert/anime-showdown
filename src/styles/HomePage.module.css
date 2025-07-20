@@ -20,6 +20,10 @@
     background: transparent;
 }
 
+.homepage-title {
+    font-size: 5rem;
+}
+
 .homepage-content {
     flex-grow: 1;
     display: flex;
@@ -133,6 +137,19 @@
         right: 15px;
     }
     
+    .homepage-title {
+        font-size: 7rem;
+    }
+    
+    .typed-out {
+        font-size: 3rem;
+    }
+    
+    .play-button, .multiplayer-button {
+        margin-bottom: 2rem;
+        font-size: 3rem;
+    }
+
     .infoIcon img {
         width: 20px;
         height: 20px;

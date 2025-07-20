@@ -601,6 +601,14 @@
     font-size: inherit;
   }
 
+  .ability-title {
+    font-size: 4rem;
+  }
+
+  .ability-damage {
+    font-size: 4rem;
+  }
+  
   .ability-display {
     height: 75%;
   }

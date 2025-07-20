@@ -95,14 +95,14 @@ export default function HomePage(){
             </button>
             
             <div className={styles['homepage-content']}>
-                <p className={styles.transparent}>Anime Showdown</p>
+                <p className={styles['homepage-title']}>Anime Showdown</p>
                 <div className={styles['homepage-caption']}><p className={styles['typed-out']}>A turn-based character card game!</p></div>
                 <div className={styles['button-container']}>
-                    <button className={styles['play-button']} onClick={() => isAuthenticated ? navigate("/play/cards") : login()}>
-                        Story Mode
-                    </button>
                     <button className={styles['multiplayer-button']} onClick={() => setShowMultiplayerOverlay(true)}>
                         Multiplayer
+                    </button>
+                    <button className={styles['play-button']} onClick={() => isAuthenticated ? navigate("/play/cards") : login()}>
+                        Story Mode
                     </button>
                 </div>
                 

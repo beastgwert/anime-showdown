@@ -217,6 +217,7 @@ input::placeholder {
 
 .status-item {
   display: flex;
+  font-size: 1.1rem;
   justify-content: space-between;
   align-items: center;
   padding: 0.8rem 0;
@@ -230,13 +231,11 @@ input::placeholder {
 .player-label {
   font-weight: 400;
   color: white;
-  font-size: 1.1rem;
 }
 
 .player-role {
   padding: 0.4rem 1rem;
   border-radius: 10px;
-  font-size: 1rem;
   font-weight: 400;
   border: 1px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.1);
@@ -344,4 +343,59 @@ input::placeholder {
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
   font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .room-options {
+    gap: 3rem;
+  }
+  .room-options h2 {
+    font-size: 5rem;
+  }
+  
+  .action-button, .join-section h3, .join-section input {
+    font-size: 3rem;
+  }
+
+  .waiting-room h2 {
+    font-size: 5rem;
+  }
+
+  .room-code-display p {
+    font-size: 2rem;
+  }
+
+  .room-code {
+    font-size: 5rem;
+  }
+
+  .copy-button {
+    font-size: 2rem;
+  }
+
+  .status-item {
+    font-size: 2rem;
+  }
+
+  .players-count {
+    font-size: 1.5rem;
+  }
+
+  .start-button, .reminder-text {
+    font-size: 2rem;
+  }
+
+  .close-button {
+    top: 10px;
+    right: 10px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .back-button-icon {
+    top: 10px;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+  }
 }
