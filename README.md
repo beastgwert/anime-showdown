@@ -1,29 +1,23 @@
 # Anime Showdown
 
-Anime Showdown is a single player level-based anime card game featuring nearly a dozen of the most iconic anime characters each with unique in-game abilities. Fight alongside and against your favorite characters, create a synergistic team, and level up your cards to fight stronger bosses as you progress through levels. 
+Anime Showdown is a multiplayer turn-based card game featuring characters from some of the most iconic anime series (Naruto, One Piece, Attack on Titan, Pokemon, etc). Characters have unique in-game abilities with various synergies and you create a 3-person team to face off against another player. 
 
-# [Preview](https://anime-showdown.vercel.app/)
+# Multiplayer
 
-![Demo Picture](src/assets/preview.png)
+![Waiting Room](src/assets/waiting_room.png)
+![Gameplay](src/assets/multiplayer_battle.png)
 
-## Built with
+# Single Player
 
-- Vite: Optimized developer experience
-- React: User interface
-- ExpressJS: REST API
-- PostgreSQL: CRUD operations
-- Tailwind: Extra styling
-- Framer Motion: Smooth motion animations
+Fight stronger bosses and level up your cards as you progress through levels.
+![Single Player](src/assets/preview.png)
 
 ## Pending Features
 
-- **Multiplayer**
-- **Additional levels and cards**
 - **Easy, medium, difficult mode levels**
-- **Text indicating damage numbers**
 - **Sound effects**
 
 
 ## Contributing
 
-Contributions are welcome! If you encounter any problems or have any suggestions, please open an issue or submit a pull request.
+All contributions are welcome! If you encounter any bugs or have any suggestions, please open an issue or submit a pull request.
